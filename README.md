@@ -64,10 +64,102 @@ Webpack com o Babel.
 
 #### var x let 
 - `var` tem escopo de função 
+  - É acessível fora do parâmetro do for onde foi  
+  declarada, por exemplo 
+  - Deve ser usado em praticamente nenhuma ocasião 
 - `let` tem escopo de qualquer bloco 
+  - Não pode ser acessada fora de um if, por exemplo
+  - Conserta o antigo problema causado pelo hoisting 
+  - Funciona da forma esperada pela maioria dos  
+  desenvolvedores
+  - Deve ser usado apenas quando a variável precisa  
+  ser atribuída 
 
-Exemplo de escopo do `var`: 
+Escopo do `var`: 
+
+```javascript
+function myFunction() {
+  var num1 = 1;
+  
+  if(true) {
+    var num2 = 2; // declarada dentro do if, mas pode ser acessada fora dele 
+  }
+
+  var num3 = num1 + num2;
+}
+``` 
+
+```javascript
+for(var counter = 0; counter <= 10; counter++) {
+  console.log(counter);
+}
+
+console.log(counter); // é acessada fora do for 
+// 11 
+```
+
+Escopo do `let`:
+
+```javascript
+function myFunction() {
+  let num1 = 1;
+  
+  if(true) {
+    let num2 = 2; // não é acessada fora do bloco onde foi declarada (if)
+  }
+
+  let num3 = num1 + num2;
+}
+```
+
+#### `let` x `const`
+- `const` funciona de forma semelhante à `let`
+  - Após sua criação, não permite que outro valor  
+  seja reatribuído 
+  - Não deixa a variável imutável, pois caso armazene  
+  um objeto, as propriedades desse objeto podem ser  
+  alteradas
+  - Deve ser usada em todas as declarações de variáveis 
+
+```javascript
+let num1 = 90;
+num1 = 89; // permite a reatribuição após ser declarada 
+
+const num2 = 586;
+num2 = 454; // TypeError: Assignment to constant variable.
+```
+
+```javascript
+const obj = {
+  prop1: 'olá',
+  prop2: 'oi'
+};
+
+console.log(obj.prop1); // 'olá'
+
+obj.prop1 = 'hello';
+
+console.log(obj.prop1); // 'hello'
+```
+
+### Parâmetros de funções 
+- No ES5, parâmetros de funções tem `undefined` como  
+**valor** default, mas esse valor pode ser alterado 
+- O ES6 introduziu uma forma mais simples e legível  
+de fazer isso, basta atribuir o valor default na  
+declaração do parâmetro desejado 
+- Pequenas mudanças que trazem enormes benefícios 
+
+Alterando o **valor** default de um parâmetro no ES5: 
 
 ```javascript
 
 ```
+
+Alterando o **valor** default de um parâmetro no ES6: 
+
+Referências: 
+- [O Guia do ES6: TUDO que você precisa saber](https://medium.com/@matheusml/o-guia-do-es6-tudo-que-você-precisa-saber-8c287876325f)
+- [MDN](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Parametros_Predefinidos)
+- [es6-features.org](http://es6-features.org/#DefaultParameterValues)
+- [es6features](https://github.com/lukehoban/es6features)
