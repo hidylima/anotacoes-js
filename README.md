@@ -143,23 +143,91 @@ console.log(obj.prop1); // 'hello'
 ```
 
 ### Parâmetros de funções 
+
+#### Default parameters 
 - No ES5, parâmetros de funções tem `undefined` como  
 **valor** default, mas esse valor pode ser alterado 
 - O ES6 introduziu uma forma mais simples e legível  
 de fazer isso, basta atribuir o valor default na  
 declaração do parâmetro desejado 
+  - Isso faz com que a checagem no corpo da função  
+  não seja mais necessária 
 - Pequenas mudanças que trazem enormes benefícios 
 
 Alterando o **valor** default de um parâmetro no ES5: 
 
 ```javascript
+function multiply(num1, num2) {
+  num2 = (typeof num2 === 'undefined') ? 2 : num2; 
+  // o parâmetro recebe 2, caso não seja definido na invocação da função 
+  
+  return num1 * num2;
+}
 
+multiply(5); // 10 
+multiply(5, 5); // 25
 ```
 
 Alterando o **valor** default de um parâmetro no ES6: 
+
+```javascript
+const multiply = (num1, num2 = 2) => num1 * num2;
+/*valor default atribuído na declaração do parâmetro */
+
+console.log(multiply(5)); // 10
+console.log(multiply(5, 5)); // 25
+```
 
 Referências: 
 - [O Guia do ES6: TUDO que você precisa saber](https://medium.com/@matheusml/o-guia-do-es6-tudo-que-você-precisa-saber-8c287876325f)
 - [MDN](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Parametros_Predefinidos)
 - [es6-features.org](http://es6-features.org/#DefaultParameterValues)
 - [es6features](https://github.com/lukehoban/es6features)
+
+#### Rest parameters 
+- Na versão ES5, é possível utilizar o objeto arguments para acessar  
+todos os parâmetros de uma função 
+
+```javascript
+function getArguments() {
+  return arguments;
+}
+
+console.log(getArguments('oi', 5, true));
+// { '0': 'oi', '1': 5, '2': true }
+```
+
+```javascript
+let sum = function() {
+  let result = 0;
+
+  for(var counter = 0; counter < arguments.length; counter++) {
+    result += arguments[counter];
+  }
+
+  return result;
+};
+
+console.log(sum(5, 5, 80)); // 90
+```
+
+- Problemas do arguments 
+  1. O objeto parece um array, mas não é 
+    - Não aceita propriedades e métodos de array 
+  2. Todos os argumentos da função são, automaticamente,  
+  atribuídos ao arguments. Não há uma forma clara de  
+  diferenciar os parâmetros 
+
+Os rest parameters foram adicionados ao ES6 com esses  
+problemas em mente. 
+- Transforma os argumentos da invocação de uma função  
+em um array 
+- Reduz o código padrão induzido pelos argumentos 
+
+```javascript
+const getArgumentsLength = (...theArgs) => {
+  return theArgs.length; // theArgs é um array 
+};
+
+getArgumentsLength(5, 1, 9, 0, 9); // 5
+```
