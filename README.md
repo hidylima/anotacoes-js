@@ -212,7 +212,7 @@ console.log(sum(5, 5, 80)); // 90
 ```
 
 - Problemas do arguments 
-  1. O objeto parece um array, mas não é 
+  1. O objeto parece um array, mas não é
     - Não aceita propriedades e métodos de array 
   2. Todos os argumentos da função são, automaticamente,  
   atribuídos ao arguments. Não há uma forma clara de  
@@ -224,6 +224,9 @@ problemas em mente.
 em um array 
 - Reduz o código padrão induzido pelos argumentos 
 
+Obtendo a quantidade de argumentos passados ao invocar  
+a função: 
+
 ```javascript
 const getArgumentsLength = (...theArgs) => {
   return theArgs.length; // theArgs é um array 
@@ -231,3 +234,111 @@ const getArgumentsLength = (...theArgs) => {
 
 getArgumentsLength(5, 1, 9, 0, 9); // 5
 ```
+
+2 formas de somar um número passado por argumento  
+com um array de números: 
+
+```javascript
+const sum = (num1, ...numbers) => {
+  let result = num1; // recebe o número do 1º argumento
+
+  numbers.forEach(number => result += number);
+  /* 
+  O segundo parâmetro é um array de números. 
+  para cada número desse array, result recebe  
+  tudo que ela já tem + o item atual do array: 
+
+  1ª passada: 9 + 1 = 10. 10 foi armazenado no result 
+  2ª passada: 10 + 10 = 20. 20 foi armazenado no result 
+  */
+  return result;
+};
+
+console.log(sum(9, 1, 10)); // 20
+```
+
+```javascript
+const sum = (num1, ...numbers) => 
+  numbers.reduce((acc, act) => acc + act, num1);
+
+console.log(sum(10, 10, 80, 50)); // 150
+```
+
+### Programação funcional 
+
+#### arrow functions 
+- Sintax sugar na criação de funções 
+- São anônimas, a não ser que sejam atribuídas à uma  
+variável 
+- Quando possui apenas 1 parâmetro, o uso do  parênteses  
+é desnecessário 
+- Quando possui apenas uma instrução, o uso do `return`, `{}`  
+e `;` é desnecessário, podendo ser escrita em apenas uma  
+linha 
+  - Essa linha única pode ser quebrada após o `=>`. Útil  
+  quando a linha é extensa 
+- Resolve um antigo problema da linguagem: o `this`
+
+Sintaxe: 
+
+```javascript
+const functionName = (param1, param2) => {
+  return ;
+};
+```
+
+`this` sendo utilizado de forma errada, no ES5: 
+
+```javascript
+function widget() {
+  var button = document.querySelector('[data-js="my-button"]');
+
+  button.addEventListener('click', function() {
+    this.doSomething(); 
+    /* o this não aponta para 'widget' como esperado e provocará um erro */
+  });
+}
+```
+
+Com as arrow functions, o this aponta para o lugar esperado: 
+
+```javascript
+function widget() {
+  var button = document.querySelector('[data-js="my-button"]');
+
+  button.addEventListener('click', () => {
+    this.doSomething(); 
+    /* o this aponta para 'widget' como esperado e não provocará um erro */
+  });
+}
+```
+
+#### destructuring 
+- É uma nova forma de **declarar** variáveis, extraindo valores  
+de objetos e arrays 
+- Referências 
+  - http://es6-features.org/#ArrayMatching
+  - https://www.youtube.com/watch?v=PB_d3uBkQPs
+  - http://www.raphaelfabeni.com.br/es6-destructuring-assignment/?utm_content=buffera722f&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer
+  - https://blog.taller.net.br/desmistificando-o-destructuring-do-javascript-es6es7/
+  - https://medium.com/@osuissa/o-que-voce-deve-saber-sobre-a-desestruturacao-de-atribuicao-assignment-destructuring-no-es6-node-js-version-d4030b505850
+  - 
+
+Sintaxe em arrays: 
+
+```javascript
+const [myNumber, myString] = [89, 'hello!'];
+
+console.log(myNumber); // 89
+console.log(myString); // 'hello'
+```
+
+Sintaxe com rest parameters: 
+
+```javascript
+const [myNumber, myString, ...restItems] = [89, 'hello!', 'item 3', 'item 4'];
+
+console.log(restItems); /// ['item 3', 'item 4']
+```
+
+Sintaxe com objetos: 
