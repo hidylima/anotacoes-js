@@ -1,5 +1,5 @@
-# ES6, ou ES 2015
-- É a nova versão do JavaScript 
+# ES6, ou ES2015
+- É o novo grupo de features do JavaScript 
 
 ## Objetivos do ES6 
 - Ser uma linguagem melhor para construir aplicações  
@@ -58,11 +58,7 @@ utilidade de transpilers.
 Numa aplicação real uma recomendação seria utilizar o  
 Webpack com o Babel.
 
-## Novidades do ES6 
-
-### Declaração de variáveis 
-
-#### var x let 
+## var x let 
 - `var` tem escopo de função 
   - É acessível fora do parâmetro do for onde foi  
   declarada, por exemplo 
@@ -112,7 +108,7 @@ function myFunction() {
 }
 ```
 
-#### `let` x `const`
+## `let` x `const`
 - `const` funciona de forma semelhante à `let`
   - Após sua criação, não permite que outro valor  
   seja reatribuído 
@@ -142,9 +138,7 @@ obj.prop1 = 'hello';
 console.log(obj.prop1); // 'hello'
 ```
 
-### Parâmetros de funções 
-
-#### Default parameters 
+## Default parameters 
 - No ES5, parâmetros de funções tem `undefined` como  
 **valor** default, mas esse valor pode ser alterado 
 - O ES6 introduziu uma forma mais simples e legível  
@@ -184,7 +178,7 @@ Referências:
 - [es6-features.org](http://es6-features.org/#DefaultParameterValues)
 - [es6features](https://github.com/lukehoban/es6features)
 
-#### Rest parameters 
+## Rest parameters 
 - Na versão ES5, é possível utilizar o objeto arguments para acessar  
 todos os parâmetros de uma função 
 
@@ -264,9 +258,7 @@ const sum = (num1, ...numbers) =>
 console.log(sum(10, 10, 80, 50)); // 150
 ```
 
-### Programação funcional 
-
-#### arrow functions 
+## arrow functions 
 - Sintax sugar na criação de funções 
 - São anônimas, a não ser que sejam atribuídas à uma  
 variável 
@@ -313,32 +305,64 @@ function widget() {
 }
 ```
 
-#### destructuring 
-- É uma nova forma de **declarar** variáveis, extraindo valores  
-de objetos e arrays 
+## destructuring 
+- Permite quebrar partes de coisas em variáveis 
+- Uso comum no `import` de libs 
+
 - Referências 
-  - http://es6-features.org/#ArrayMatching
   - https://www.youtube.com/watch?v=PB_d3uBkQPs
+  - http://es6-features.org/#ArrayMatching
   - http://www.raphaelfabeni.com.br/es6-destructuring-assignment/?utm_content=buffera722f&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer
   - https://blog.taller.net.br/desmistificando-o-destructuring-do-javascript-es6es7/
   - https://medium.com/@osuissa/o-que-voce-deve-saber-sobre-a-desestruturacao-de-atribuicao-assignment-destructuring-no-es6-node-js-version-d4030b505850
-  - 
 
 Sintaxe em arrays: 
 
 ```javascript
-const [myNumber, myString] = [89, 'hello!'];
+const [myNumber, myString] = [83, 'hello!'];
 
-console.log(myNumber); // 89
-console.log(myString); // 'hello'
+myNumber; // 83
+myString; // 'hello'
 ```
 
 Sintaxe com rest parameters: 
 
 ```javascript
-const [myNumber, myString, ...restItems] = [89, 'hello!', 'item 3', 'item 4'];
+const [myNumber, ...myStringsArray] = [71, 'hello!', 'hi!', 'hey!'];
 
-console.log(restItems); /// ['item 3', 'item 4']
+myNumber; // 71
+myStringsArray; // ['hello!', 'hi!', 'hey']
 ```
 
 Sintaxe com objetos: 
+
+```javascript
+const person = {
+  name: 'Roger Melo',
+  weight: '70kg'
+};
+
+const {name, weight} = person; 
+/* 
+as constantes recebem as propriedades do objeto, desde que tenham o mesmo nome 
+*/
+
+console.log(name, weight); // 'Roger Melo' '70kg'
+```
+
+Sintaxe no `import` de libs: 
+
+```javascript
+/* ES5 */
+var ReactRouter = require('react-router');
+var Route = ReactRouter.Route;
+var Link = ReactRouter.Link;
+var Router = ReactRouter.Router;
+
+/* ES6 */
+const {Route, Link, Router} = require('react-router');
+/* 
+as constantes recebem as propriedades do objeto importado, desde que tenham 
+o mesmo nome 
+*/
+```
