@@ -12,6 +12,16 @@ bibliotecas
 - Usado para que a maioria dos browsers suporte o ES6 
 - Transpila / transforma código ES6 para ES5 
 
+## Por que usar o Babel 
+- Permite que eu use, **agora**, features novas do JavaScript! 
+  - Roda no Node JS e no Browser 
+  - Integra-se em praticamente todas as ferramentas (Gulp,  
+  Grunt, Browsefy, etc)
+- Compila o código cheio de features novas em um código de js  
+'normal' (ES5)
+- É uma boa maneira de ver o que está acontecendo, de maneira  
+tradicional 
+
 ## Iniciando um projeto simples com o Babel 
 - Estrutura de pastas inicial: 
 
@@ -306,7 +316,17 @@ function widget() {
 ```
 
 ## destructuring 
-- Permite quebrar partes de coisas em variáveis 
+- Permite quebrar coisas (arrays e objetos) em partes (variáveis) 
+  - É possível, por exemplo, atribuir duas propriedades de um  
+  objeto à duas variáveis, **em apenas uma declaração**
+    - O objeto está sendo desestruturado em duas variáveis 
+    - É importante que as variáveis possuam o mesmo nome das  
+    propriedades
+- Foi criado para facilitar o tratamento dos objetos-opções 
+  - Objetos-opções são, basicamente, objetos que são passados  
+  como argumentos de funções. Ou seja, um único objeto que contém  
+  várias propriedades 
+  - Diminui muito o cumprimento do código 
 - Uso comum no `import` de libs 
 
 - Referências 
@@ -337,17 +357,70 @@ myStringsArray; // ['hello!', 'hi!', 'hey']
 Sintaxe com objetos: 
 
 ```javascript
-const person = {
-  name: 'Roger Melo',
-  weight: '70kg'
+let animal = {
+  species: 'dog',
+  weight: 40,
+  sound: 'woof'
 };
 
-const {name, weight} = person; 
+const {species, sound} = animal;
+
+console.log(`The ${species} says ${sound}!`); 
+// 'The dog says woof!'
 /* 
 as constantes recebem as propriedades do objeto, desde que tenham o mesmo nome 
 */
+```
 
-console.log(name, weight); // 'Roger Melo' '70kg'
+```javascript
+makeSound({species: 'dog', weight: '39', sound: 'woof'});
+
+/* Sem usar destructuring */
+function makeSound(options) {
+  console.log(`The ${options.species} says ${options.sound}`);
+}
+```
+
+```javascript
+/* 
+- Usando a propriedade species como uma propriedade opcional no objeto 'options'. 
+- Atribuindo um valor padrão à propriedade, caso ela seja undefined (não exista)
+- Ainda sem usar destructuring 
+*/
+makeSound({weight: '39', sound: 'woof'});
+
+function makeSound(options) {
+  options.species = options.species || 'animal'; 
+  
+  console.log(`The ${options.species} says ${options.sound}`);
+}
+
+/* 
+Problemas do código acima:
+- Se esse tipo de sintaxe fizer parte de um sistema, o código fica enorme.
+- Os problemas abordados nesse tipo de código também ficarão maior. 
+- Há muitas repetições. options está sendo muito referenciada 
+- Difícil leitura, devido às várias referências com 'options.species'
+  - 'species' seria mais legível que 'options.species' ou 'options.sound' 
+*/
+```
+
+```javascript
+/* 
+- Alguns dos problemas do código acima podem ser resolvidos sem  
+destructuring, apenas declarando variáveis no topo da função. 
+*/
+makeSound({weight: '39', sound: 'woof'});
+
+function makeSound(options) {
+  const species = options.species || 'animal';
+  const sound = options.sound;
+  
+  console.log(`The ${species} says ${sound}`);
+}
+/* 
+- Ficou um pouco melhor, devido à legibilidade 
+*/
 ```
 
 Sintaxe no `import` de libs: 
