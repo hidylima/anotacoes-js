@@ -1,7 +1,7 @@
 # ES6, ou ES2015
 - É o novo grupo de features do JavaScript 
 
-## Objetivos do ES6 
+# Objetivos do ES6 
 - Ser uma linguagem melhor para construir aplicações  
 complexas
 - Resolver problemas antigos do JavaScript 
@@ -12,7 +12,7 @@ bibliotecas
 - Usado para que a maioria dos browsers suporte o ES6 
 - Transpila / transforma código ES6 para ES5 
 
-## Por que usar o Babel 
+# Por que usar o Babel 
 - Permite que eu use, **agora**, features novas do JavaScript! 
   - Roda no Node JS e no Browser 
   - Integra-se em praticamente todas as ferramentas (Gulp,  
@@ -22,7 +22,7 @@ bibliotecas
 - É uma boa maneira de ver o que está acontecendo, de maneira  
 tradicional 
 
-## Iniciando um projeto simples com o Babel 
+# Iniciando um projeto simples com o Babel 
 - Estrutura de pastas inicial: 
 
 ![initial-folders](https://user-images.githubusercontent.com/29297788/43144746-3e8c09b0-8f34-11e8-8e14-685fc01c6798.jpg)
@@ -68,7 +68,7 @@ utilidade de transpilers.
 Numa aplicação real uma recomendação seria utilizar o  
 Webpack com o Babel.
 
-## var x let 
+# var x let 
 - `var` tem escopo de função 
   - É acessível fora do parâmetro do for onde foi  
   declarada, por exemplo 
@@ -118,7 +118,7 @@ function myFunction() {
 }
 ```
 
-## `let` x `const`
+# `let` x `const`
 - `const` funciona de forma semelhante à `let`
   - Após sua criação, não permite que outro valor  
   seja reatribuído 
@@ -148,7 +148,7 @@ obj.prop1 = 'hello';
 console.log(obj.prop1); // 'hello'
 ```
 
-## Default parameters 
+# Default parameters 
 - No ES5, parâmetros de funções tem `undefined` como  
 **valor** default, mas esse valor pode ser alterado 
 - O ES6 introduziu uma forma mais simples e legível  
@@ -188,7 +188,7 @@ Referências:
 - [es6-features.org](http://es6-features.org/#DefaultParameterValues)
 - [es6features](https://github.com/lukehoban/es6features)
 
-## Rest parameters 
+# Rest parameters 
 - Na versão ES5, é possível utilizar o objeto arguments para acessar  
 todos os parâmetros de uma função 
 
@@ -268,7 +268,7 @@ const sum = (num1, ...numbers) =>
 console.log(sum(10, 10, 80, 50)); // 150
 ```
 
-## arrow functions 
+# arrow functions 
 - Sintax sugar na criação de funções 
 - São anônimas, a não ser que sejam atribuídas à uma  
 variável 
@@ -315,7 +315,7 @@ function widget() {
 }
 ```
 
-## destructuring 
+# destructuring 
 - **É uma expressão que, permite quebrar coisas (arrays e objetos) em partes (variáveis)** 
   - É possível, por exemplo, atribuir duas propriedades de um  
   objeto à duas variáveis, **em apenas uma declaração**
@@ -328,7 +328,12 @@ function widget() {
   várias propriedades 
   - Diminui muito o cumprimento do código 
 - É possível que uma variável destructuring receba um valor  
-default: `{myVar1 = 'value', myVar2}`
+default como parâmetro: `{myVar1 = 'value', myVar2}`
+- É possível que os valores de duas variáveis sejam trocados 
+- É possível combinar o retorno de funções com destructuring
+  - É possível selecionar e ignorar valores que a função retorna 
+    - É possível ignorar todos os valores que a função retorna 
+- É possível combinar o retorno de uma expressão regular com destructuring
 - Uso comum no `import` de libs 
 
 - Referências 
@@ -440,6 +445,104 @@ function makeSound({species = 'dog', sound}) {
 makeSound({weight: '39', sound: 'woof'});
 ```
 
+Trocando valores de variáveis: 
+
+```javascript
+let let1 = 'valor1';
+let let2 = 'valor2';
+
+[let1, let2] = [let2, let1];
+
+/* 
+a primeira variável, do primeiro array,  
+recebe a primeira variável do segundo 
+array 
+*/
+
+console.log(let1); // valor2
+
+console.log(let2); // valor1
+```
+
+Combinando o retorno de funções com destructuring:
+
+```javascript
+function getArr() {
+  return [89, 596, 185];
+}
+
+let a, b;
+
+[a, b] = getArr();
+
+console.log(a); // 89
+console.log(b); // 596
+
+// O terceiro item do array não foi passado na expressão de destructuring
+``` 
+
+Ignorando valores retornados por funções: 
+
+```javascript
+function getArr() {
+  return [25, 37, 965];
+}
+
+const [num1, , num3] = getArr();
+
+console.log(num1, num3); // 25 965
+
+/* 
+- Na expressão destructuring, o segundo item do array que 
+a função retorna foi ignorado
+*/
+```
+
+Ignorando todos os valores que uma função retorna: 
+
+```javascript
+function getArr() {
+  return [25, 37, 965];
+}
+
+[, ,] = getArr();
+```
+
+Combinando o retorno de uma função + rest parameters: 
+
+```javascript
+function getArr() {
+  return [25, 37, 965, 5896, 607, 222];
+}
+
+const [num1, num2, ...allNums] = getArr();
+
+console.log(num1, num2, allNums);
+// 25 37 [ 965, 5896, 607, 222 ]
+```
+
+Combinando um array retornado de uma expressão regular com destructuring + porções ignoradas:
+
+```javascript
+const url = 'https://www.youtube.com/playlist?list=FLdIqD5WPjBMMUEG7Vj3Alug';
+const parsedUrl = /^(\w+)\:\/\/([^\/]+)\/(.*)$/.exec(url);
+
+console.log(parsedUrl);
+/* 
+[ 'https://www.youtube.com/playlist?list=FLdIqD5WPjBMMUEG7Vj3Alug',
+  'https',
+  'www.youtube.com',
+  'playlist?list=FLdIqD5WPjBMMUEG7Vj3Alug',
+  index: 0,
+  input: 'https://www.youtube.com/playlist?list=FLdIqD5WPjBMMUEG7Vj3Alug' ]
+*/
+
+const [, protocol, adress] = parsedUrl;
+
+console.log(`O protocolo usado em '${adress}' é '${protocol}'`);
+// O protocolo usado em 'www.youtube.com' é 'https'
+```
+
 Sintaxe no `import` de libs: 
 
 ```javascript
@@ -456,3 +559,4 @@ as constantes recebem as propriedades do objeto importado, desde que tenham
 o mesmo nome 
 */
 ```
+
