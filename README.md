@@ -316,17 +316,19 @@ function widget() {
 ```
 
 ## destructuring 
-- Permite quebrar coisas (arrays e objetos) em partes (variáveis) 
+- **É uma expressão que, permite quebrar coisas (arrays e objetos) em partes (variáveis)** 
   - É possível, por exemplo, atribuir duas propriedades de um  
   objeto à duas variáveis, **em apenas uma declaração**
     - O objeto está sendo desestruturado em duas variáveis 
-    - É importante que as variáveis possuam o mesmo nome das  
-    propriedades
+    - Ao se trabalhar com objetos, é necessário que as variáveis  
+    possuam o mesmo nome das propriedades do objeto
 - Foi criado para facilitar o tratamento dos objetos-opções 
   - Objetos-opções são, basicamente, objetos que são passados  
   como argumentos de funções. Ou seja, um único objeto que contém  
   várias propriedades 
   - Diminui muito o cumprimento do código 
+- É possível que uma variável destructuring receba um valor  
+default: `{myVar1 = 'value', myVar2}`
 - Uso comum no `import` de libs 
 
 - Referências 
@@ -421,6 +423,21 @@ function makeSound(options) {
 /* 
 - Ficou um pouco melhor, devido à legibilidade 
 */
+```
+
+```javascript
+/* 
+- Com destructuring, atribuindo um valor default à  
+uma das variáveis que estão quebrando o objeto  
+passado por argumento, DECLARANDO O DESTRUCTURING  
+NO PARÂMETRO DA FUNÇÃO, o código fica menos verboso 
+*/
+
+function makeSound({species = 'dog', sound}) {
+  console.log(`The ${species} says ${sound}.`);
+}
+
+makeSound({weight: '39', sound: 'woof'});
 ```
 
 Sintaxe no `import` de libs: 
