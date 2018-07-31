@@ -217,7 +217,7 @@ console.log(sum(5, 5, 80)); // 90
 
 - Problemas do arguments 
   1. O objeto parece um array, mas não é
-    - Não aceita propriedades e métodos de array 
+    1. Não aceita propriedades e métodos de array 
   2. Todos os argumentos da função são, automaticamente,  
   atribuídos ao arguments. Não há uma forma clara de  
   diferenciar os parâmetros 
@@ -559,4 +559,12 @@ as constantes recebem as propriedades do objeto importado, desde que tenham
 o mesmo nome 
 */
 ```
+
+# `class`
+- Sintaxe amigável que define o estado e comportamento de objetos  
+que representam abstrações usadas diariamente 
+- `constructor()`
+  - Funciona muito bem em casos onde, por exemplo, cada instância do  
+  objeto possua as mesmas propriedades, mas os valores entre essas  
+  propriedades são diferentes 
 
