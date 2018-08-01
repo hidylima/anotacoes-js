@@ -560,11 +560,118 @@ o mesmo nome
 */
 ```
 
+# Criação de Objetos em JavaScript 
+- Não há 'a' maneira mais correta de se criar objetos e fazer  
+orientação à objetos em JS 
+- Lembrando que JS é a maior linguagem de programação do mundo 
+
+```javascript
+const dog = {
+  name: 'Atlas',
+  sound: 'woof',
+  talk: function() {
+    console.log(this.sound);
+  }
+};
+
+dog.talk(); // woof
+
+let talkFunction = dog.talk; 
+// o método foi atribuído à uma variável 
+
+talkFunction(); // undefined
+/* 
+- Ao invocar a variável que recebeu o método, undefined é retornado. 
+  - É o tipo de exemplo que mostra como a orientação à objetos em JS  
+  colide com sua orientação à funções 
+
+- Ao atribuir um método à uma variável, 
+*/
+```
+
+# `this`
+- Em linguagens totalmente orientadas à funções, o this não existe 
+- Sua existência é crucial para que uma linguagem orientada à objetos,  
+como Java, funcione 
+
 # `class`
 - Sintaxe amigável que define o estado e comportamento de objetos  
 que representam abstrações usadas diariamente 
 - `constructor()`
+  - Faz a inicialização da instância do objeto, disponibilizando todas  
+  as propriedades e métodos nele 
   - Funciona muito bem em casos onde, por exemplo, cada instância do  
   objeto possua as mesmas propriedades, mas os valores entre essas  
   propriedades são diferentes 
+- `getters / setters`
+  - Protegem os dados internos das instâncias dos objetos 
+  - Possibilitam que os métodos sejam chamados como propriedades,  
+  tornando desnecessário o uso de `()` na invocação 
+    - Em setters, a sintaxe passa a usar o sinal de atribuição `=`
+- Herança
+  - Em casos onde as instâncias/objetos dessa classe devam ter um  
+  novo comportamento
+- `_property` convenção que indica que essa propriedade deve ser  
+mantida como privada
 
+Exemplo de class com constructor: 
+
+```javascript
+class Animal {
+  constructor(name) {
+    this._name = name;
+  }
+
+  getName() {
+    return this._name;
+  }
+
+  setName(name) {
+    this._name = name;
+  }
+}
+
+const animal = new Animal('cat');
+
+console.log(animal); 
+// {_name: 'cat'}
+
+console.log(animal.getName());
+// 'cat'
+
+animal.setName('dog');
+
+console.log(animal.getName());
+// 'dog'
+```
+
+Exemplo reescrito com `getters / setters`: 
+
+```javascript
+class Animal {
+  constructor(name) {
+    this._name = name;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  set name(name) {
+    this._name = name;
+  }
+}
+
+const animal = new Animal('cat');
+
+console.log(animal); 
+// {_name: 'cat'}
+
+console.log(animal.name);
+// 'cat'
+
+animal.setName = 'dog';
+
+console.log(animal.name);
+// 'dog'
+```
