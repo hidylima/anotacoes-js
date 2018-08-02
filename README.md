@@ -593,6 +593,81 @@ talkFunction(); // undefined
 - Em linguagens totalmente orientadas à funções, o this não existe 
 - Sua existência é crucial para que uma linguagem orientada à objetos,  
 como Java, funcione 
+- Em funções, o `this` **não** referencia o contexto onde a função  
+foi declarada, mas sim o contexto / objeto em que a função foi  
+**invocada** 
+  - No entanto, é possível usar o `bind` para referenciar o contexto  
+  desejado
+
+Exemplo de `this` retornando `undefined`: 
+
+```javascript
+const dog = {
+  name: 'Atlas',
+  sound: 'woof',
+  talk: function() {
+    console.log(this.sound);
+  }
+};
+
+dog.talk(); // woof
+
+let talkFunction = dog.talk; 
+/* o método foi atribuído à uma variável, então, 'this' não corresponde  
+e não está mais conectado ao objeto 'dog' */
+
+talkFunction(); // undefined
+/* 
+- Ao invocar a variável que recebeu o método, undefined é retornado. 
+  - É o tipo de exemplo que mostra como a orientação à objetos em JS  
+  colide com sua orientação à funções 
+
+- Ao atribuir um método que utiliza o this, à uma variável, ele NÃO  
+É MAIS UM MÉTODO, mas sim uma função. Ele deixou de ser um método  
+conectado à um objeto. Ele agora é apenas uma função aleatoria 
+*/
+```
+
+# `bind()`
+- Método que pega a função que foi desconectada de seu contexto  
+original e a conecta novamente, ou a conecta à outro contexto  
+desejado
+- Força o `this` a referenciar o objeto especificado 
+- Frequentemente usado em JS 
+
+Continuação do primeiro exemplo em `this`
+
+```javascript
+const dog = {
+  name: 'Atlas',
+  sound: 'woof',
+  talk: function() {
+    console.log(this.sound);
+  }
+};
+
+let boundFunction = dog.talk.bind(dog);
+// ligou novamente o contexto do método ao objeto dog
+
+boundFunction(); // 'woof'
+```
+
+Exemplo com uma situação mais real: 
+
+```javascript
+const dog = {
+  sound: 'woooof',
+  talk: function() {
+    console.log(this.sound);
+  }
+};
+
+
+let button = document.querySelector('[data-js="my-nice-button"]');
+
+button.addEventListener('click', dog.talk);
+// ao clicar no botão, undefined é mostrado no console
+```
 
 # `class`
 - Sintaxe amigável que define o estado e comportamento de objetos  
