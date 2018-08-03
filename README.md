@@ -652,7 +652,7 @@ let boundFunction = dog.talk.bind(dog);
 boundFunction(); // 'woof'
 ```
 
-Exemplo com uma situação mais real: 
+Exemplo com uma situação próxima ao real: 
 
 ```javascript
 const dog = {
@@ -662,12 +662,41 @@ const dog = {
   }
 };
 
-
 let button = document.querySelector('[data-js="my-nice-button"]');
 
 button.addEventListener('click', dog.talk);
-// ao clicar no botão, undefined é mostrado no console
+/* 
+- Ao clicar no botão, undefined é mostrado no console
+- Quando o método é atribuído ao evento, o this dele não  
+é mais o objeto dog, mas sim o objeto window 
+*/ 
 ```
+
+Problema do exemplo acima resolvido com o método bind()
+
+```javascript
+const dog = {
+  sound: 'woooof',
+  talk: function() {
+    console.log(this.sound);
+  }
+};
+
+const button = document.querySelector('[data-js="my-nice-button"]');
+
+button.addEventListener('click', dog.talk.bind(dog));
+/* 
+- Agora, o que foi passado como callback para o evento não foi o  
+método puro do objeto, mas sim uma nova função, que limita  
+o this para o objeto dog 
+*/
+```
+
+# `addEventListener()`
+- Método que adiciona um evento à um elemento / objeto 
+- Sempre irá buscar no objeto window o método ou função passada  
+como parâmetro 
+  - O método `bind()` é uma forma de resolver este problema 
 
 # `class`
 - Sintaxe amigável que define o estado e comportamento de objetos  
