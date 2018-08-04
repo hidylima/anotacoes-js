@@ -590,6 +590,13 @@ talkFunction(); // undefined
 ```
 
 # `this`
+- Palavra-chave que pode ser usada em funções 
+- Assim como na lingua inglesa, `this` não tem significado, se não  
+houver um contexto (exemplo 2)
+  - "I don't like this"... 
+    - Requer que o contexto do que está sendo conversado seja inferido 
+- Referencia o **objeto global**, por default, caso esteja dentro de uma  
+função (exemplo 3)
 - Em linguagens totalmente orientadas à funções, o this não existe 
 - Sua existência é crucial para que uma linguagem orientada à objetos,  
 como Java, funcione 
@@ -628,11 +635,38 @@ conectado à um objeto. Ele agora é apenas uma função aleatoria
 */
 ```
 
+exemplo 2: 
+
+```javascript
+function talk() {
+  console.log(this.sound);
+}
+
+talk();
+// undefined
+```
+
+exemplo 3:
+
+```javascript
+function talk() {
+  console.log(this);
+}
+
+talk();
+// Window {postMessage: ƒ, blur: ƒ, focus: ƒ, close: ƒ, frames: Window, …}
+```
+
 # `bind()`
 - Método que pega a função que foi desconectada de seu contexto  
 original e a conecta novamente, ou a conecta à outro contexto  
 desejado
-- Força o `this` a referenciar o objeto especificado 
+- Força o `this` a referenciar o objeto especificado (exemplo 4)
+  - Cria uma cópia da função que possui o `this` que retorna `undefined`  
+  - Nesta nova cópia, o this será limitado ao objeto especificado por  
+  - Não altera a função original
+  parâmetro
+- É uma maneira de explicitar o significado do `this`
 - Frequentemente usado em JS 
 
 Continuação do primeiro exemplo em `this`
@@ -690,6 +724,46 @@ button.addEventListener('click', dog.talk.bind(dog));
 método puro do objeto, mas sim uma nova função, que limita  
 o this para o objeto dog 
 */
+```
+
+exemplo 4:
+
+```javascript
+function talk() {
+  console.log(this.sound);
+  // retorna undefined, pois o window object não possui a propriedade sound
+}
+
+let boromir = {
+  sound: 'One does not so simply walk into mordor'
+  // possui uma propriedade sound
+};
+
+let talkBoundToBoromir = talk.bind(boromir);
+/* bind Criou uma cópia da função talk onde o this é limitado ao objeto */
+
+talkBoundToBoromir();
+// 'One does not so simply walk into mordor'
+```
+
+# Alterando o contexto do `this` sem utilizar o bind 
+- Basta atribuir, à propriedade de um objeto, como referência,  
+a função que tenha um `this` interno (exemplo 1)
+
+exemplo 1:
+
+```javascript
+let talk = function() {
+  return this.sound;
+}
+
+let florencio = {
+  says: talk,
+  sound: 'woooonk'
+};
+
+console.log(florencio.says());
+// 'woooonk'
 ```
 
 # `addEventListener()`
