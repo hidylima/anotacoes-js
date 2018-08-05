@@ -906,3 +906,18 @@ animal.setName = 'dog';
 console.log(animal.name);
 // 'dog'
 ```
+
+# Prototype Basics 
+- Em js, a herança é feita através de prototypes 
+- **O que são** prototypes e suas diferenças entre classes de outras  
+linguagens: 
+  - Class 
+    - São equivalentes à blueprints de uma construção. Um  
+    blueprint é usado para criar novas construções 
+  - Prototype 
+    - É equivalente à uma delegação. Quando o governo precisa  
+    tomar uma decisão, ele irá questionar os delegados ao invés  
+    de perguntar à milhões de pessoas o que elas estão pensando.  
+    Ou seja, o Governo delegou a decisão aos seus delegados.
+- **Por que usar prototypes**
+  - Em novas versões do JS, prototypes são a palavra-chave `class`
