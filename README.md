@@ -599,7 +599,7 @@ houver um contexto (exemplo 2)
 função (exemplo 3)
 - Em linguagens totalmente orientadas à funções, o this não existe 
 - Sua existência é crucial para que uma linguagem orientada à objetos,  
-como Java, funcione 
+como o Java, funcione 
 - Em funções, o `this` **não** referencia o contexto onde a função  
 foi declarada, mas sim o contexto / objeto em que a função foi  
 **invocada** 
@@ -662,10 +662,10 @@ talk();
 original e a conecta novamente, ou a conecta à outro contexto  
 desejado
 - Força o `this` a referenciar o objeto especificado (exemplo 4)
-  - Cria uma cópia da função que possui o `this` que retorna `undefined`  
-  - Nesta nova cópia, o this será limitado ao objeto especificado por  
+  - **Cria uma cópia** da função que possui o `this` 
+  - Nesta nova cópia, o this será limitado apenas ao objeto  
+  especificado por parâmetro
   - Não altera a função original
-  parâmetro
 - É uma maneira de explicitar o significado do `this`
 - Frequentemente usado em JS 
 
@@ -749,6 +749,18 @@ talkBoundToBoromir();
 # Alterando o contexto do `this` sem utilizar o bind 
 - Basta atribuir, à propriedade de um objeto, como referência,  
 a função que tenha um `this` interno (exemplo 1)
+  - Através deste exemplo, e do exemplo 3, fica claro que  
+  funções em JS são apenas valores que podem ser passados,  
+  da mesma forma que valores number, string, boolean ou  
+  object
+  - A função que foi atribuída como referência permanece  
+  inalterada. Se chamada novamente, **fora do objeto**,  
+  continua a retornar `undefined`, pois referencia o objeto  
+  global, que não possui uma propriedade sound
+- É importante saber que a propriedade que referencia a  
+função que foi atribuída e a referência da função sem si,  
+fora do objeto, estão ambas se referindo à mesma função.  
+Não é uma cópia (exemplo 2)
 
 exemplo 1:
 
@@ -758,12 +770,53 @@ let talk = function() {
 }
 
 let florencio = {
-  says: talk,
+  says: talk, 
+  /* - A propriedade says agora referencia a função talk */
   sound: 'woooonk'
 };
 
 console.log(florencio.says());
 // 'woooonk'
+/* 
+- Como says agora é um método, o JS automaticamente assume que  
+o this dele será o próprio objeto 'florencio': 
+florencio.says() retorna florencio.sound
+*/
+```
+
+exemplo 2:
+
+```javascript
+
+/* ... */
+
+console.log(dog.says === talk); // true
+```
+
+exemplo 3: 
+
+```javascript
+function talk() {
+  return this.sound;
+}
+
+let boromir = {
+  blabber: talk,
+  sound: 'One does not simply walk into Mordor'
+};
+
+let gollum = {
+  jabber: boromir.blabber,
+  /* 
+  - O valor boromir.blabber é apenas uma referência à função  
+  talk. É o mesmo que fazer jabber: talk.
+  - Esse tipo de código da linha acima é terrível, nunca deve  
+  ser feito em produção, mas apenas como material didático 
+  */
+  sound: 'My preciouuuus....'
+};
+
+console.log(gollum.jabber());
 ```
 
 # `addEventListener()`
