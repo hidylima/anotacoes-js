@@ -775,7 +775,7 @@ let florencio = {
   sound: 'woooonk'
 };
 
-console.log(florencio.says());
+console.log(florencio.says()); // o que está à esquerda do método é o this!!!
 // 'woooonk'
 /* 
 - Como says agora é um método, o JS automaticamente assume que  
@@ -907,6 +907,26 @@ console.log(animal.name);
 // 'dog'
 ```
 
+# Atribuição de funções à propriedades de objetos com o mesmo nome 
+- Em ES6, se a função que é atribuída como referência à propriedade  
+possui o mesmo nome da propriedade, é possível omitir o nome da função  
+(exemplo 1) 
+
+exemplo 1:
+
+```javascript
+function talk() {
+  console.log(this.sound);
+}
+
+const animal = {
+  talk, // função talk atribuída! 
+  sound: `wooooof!`
+};
+
+animal.talk(); // 'wooooof!'
+```
+
 # Prototype Basics 
 - Em js, a herança é feita através de prototypes 
 - **O que são** prototypes e suas diferenças entre classes de outras  
@@ -920,4 +940,42 @@ linguagens:
     de perguntar à milhões de pessoas o que elas estão pensando.  
     Ou seja, o Governo delegou a decisão aos seus delegados.
 - **Por que usar prototypes**
-  - Em novas versões do JS, prototypes são a palavra-chave `class`
+  - É um simples e poderoso modelo de herança 
+  - A palavra-chave `class`, em JS, é apenas uma fina camada  
+  que envolve o prototype
+    - Classes apenas usam o prototype por baixo dos panos 
+  - É um conceito ainda mais simples que o conceito de classes 
+- A adição da palavra-chave `class` na linguagem tem razões de  
+adaptação para quem vem de outras linguagens 
+
+# `Object.setPrototypeOf(obj1, obj2)`
+- Especifica qual será o prototype de um objeto 
+  - Conforme o título acima, `obj1` herdou os métodos e  
+  propriedades do `obj2` (exemplo 1)
+
+exemplo 1:
+
+```javascript
+function talk() {
+  console.log(this.sound);
+}
+
+const animal = {
+  talk,
+};
+
+const cat = {
+  sound: `meeeeoooowwww!`
+};
+
+Object.setPrototypeOf(cat, animal); 
+/* 
+- O protótipo de 'cat' agora é 'animal'
+- 'cat' herdou propriedades e métodos de 'animal'
+- 'cat' agora possui o método 'talk'
+*/
+
+cat.talk();
+// 'meeeeoooowwww!'
+// 'this', da função 'talk' agora é o objeto 'cat'
+``` 
