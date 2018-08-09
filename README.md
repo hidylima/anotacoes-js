@@ -316,7 +316,7 @@ function widget() {
 ```
 
 # destructuring 
-- **É uma expressão que, permite quebrar coisas (arrays e objetos) em partes (variáveis)** 
+- **É uma expressão que permite quebrar coisas (arrays e objetos) em partes (variáveis)** 
   - É possível, por exemplo, atribuir duas propriedades de um  
   objeto à duas variáveis, **em apenas uma declaração**
     - O objeto está sendo desestruturado em duas variáveis 
@@ -584,8 +584,6 @@ talkFunction(); // undefined
 - Ao invocar a variável que recebeu o método, undefined é retornado. 
   - É o tipo de exemplo que mostra como a orientação à objetos em JS  
   colide com sua orientação à funções 
-
-- Ao atribuir um método à uma variável, 
 */
 ```
 
@@ -658,6 +656,7 @@ talk();
 ```
 
 # `bind()`
+- Ligar, vincular 
 - Método que pega a função que foi desconectada de seu contexto  
 original e a conecta novamente, ou a conecta à outro contexto  
 desejado
