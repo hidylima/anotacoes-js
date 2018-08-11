@@ -931,8 +931,8 @@ animal.talk(); // 'wooooof!'
 - **O que são** prototypes e suas diferenças entre classes de outras  
 linguagens: 
   - Class 
-    - São equivalentes à blueprints de uma construção. Um  
-    blueprint é usado para criar novas construções 
+    - São equivalentes à cópias de um blueprint de uma construção.  
+    Um blueprint é usado para criar novas construções 
   - Prototype 
     - É equivalente à uma delegação. Quando o governo precisa  
     tomar uma decisão, ele irá questionar os delegados ao invés  
