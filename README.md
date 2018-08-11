@@ -978,3 +978,35 @@ cat.talk();
 // 'meeeeoooowwww!'
 // 'this', da função 'talk' agora é o objeto 'cat'
 ``` 
+
+# A palavra chave `new`, aplicada à funções 
+- A palavra chave `class` utiliza a técnica do exemplo 1, por baixo  
+dos panos
+  - `new` Cria um novo objeto, sem propriedades ou métodos 
+  - Olha aonde foi declarado um novo `new`, checa o protótipo desse  
+  novo objeto e seta o protótipo desse novo objeto que foi criado  
+  para ser esse objeto 
+  - Depois, olha novamente aonda `new` foi chamado, que é no construtor  
+  (atribuído à let), invoca a função Person, mas irá invocá-la com o novo  
+  objeto, que foi criado no passo 1, atribuído ao `this` da função  
+  Person
+  - Retorna para a let o novo objeto que foi criado 
+- No exemplo 2, a palavra `new` não irá existir, mas será construída,  
+como uma função 
+
+exemplo 1: 
+
+```javascript
+function Person(saying) {
+  this.saying = saying;
+}
+
+Person.prototype.talk = function() {
+  console.log(`I say ${this.saying}`);
+};
+
+let person = new Person('hello!');
+
+person.talk();
+// 'I say hello!'
+```
