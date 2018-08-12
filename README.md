@@ -983,9 +983,9 @@ cat.talk();
 - A palavra chave `class` utiliza a técnica do exemplo 1, por baixo  
 dos panos
   - `new` Cria um novo objeto, sem propriedades ou métodos 
-  - Olha aonde foi declarado um novo `new`, checa o protótipo desse  
-  novo objeto e seta o protótipo desse novo objeto que foi criado  
-  para ser esse objeto 
+  - O JS olha aonde foi declarado um novo `new`, checa o protótipo  
+  desse novo objeto e seta o protótipo desse novo objeto que foi  
+  criado para ser esse objeto 
   - Depois, olha novamente aonda `new` foi chamado, que é no construtor  
   (atribuído à let), invoca a função Person, mas irá invocá-la com o novo  
   objeto, que foi criado no passo 1, atribuído ao `this` da função  
@@ -1010,3 +1010,71 @@ let person = new Person('hello!');
 person.talk();
 // 'I say hello!'
 ```
+
+exemplo 2: 
+
+```javascript
+function Person(saying) {
+  this.saying = saying;
+  return {
+    dumbObj: true
+  };
+}
+
+Person.prototype.talk = function() {
+  return `my prhase is ${this.saying}`;
+};
+
+function spawn(constructor) {
+  let obj = {};
+  Object.setPrototypeOf(obj, constructor.prototype);
+  let argsArr = Array.prototype.slice.apply(arguments);
+  return constructor.apply(obj, argsArr.slice(1)) || obj;
+}
+
+const person = spawn(Person, 'hi');
+
+console.log('hello', person);
+// console.log(person.talk());
+
+/* 
+  - Declarar uma função `new()`
+  - Criar um novo objeto e atribuí-lo à uma let interna da função  
+  - Setar o prototype do novo objeto, com o `Object.setPrototypeOf()`.  
+  O protótipo do objeto será um `constructor`, passado por parâmetro 
+  - Na invocação da função, `Person` é passada como um objeto  
+  construtor. Lembrando que o método `talk` está atribuído ao  
+  protótipo do objeto `Person`
+  - Executar o `constructor` com o `this` setado ao novo objeto criado,  
+  utilizando o `apply`, que é uma espécie de `bind()`, exceto pelo fato  
+  que o `apply` executa a função imediatamente.  
+    - O `apply` recebe como primeiro parâmetro o objeto a ser setado  
+    como o `this`. O segundo parâmetro é um array dos argumentos a  
+    serem invocados com a função 
+    - No caso da função `Person`, será um array apenas com um item  
+    (frase), que representa o parâmetro `saying`
+    - É necessário que o segundo parâmetro seja dinâmico, então,  
+    ele representará os argumentos que serão passados na invocação  
+    da função construtora. Ou seja, isso pode ser feito com a  
+    palavra-chave `arguments`. 
+    - Lembrando que `new` é uma palavra-chave em JS, então, será  
+    renomeado para `spawn`
+    - `arguments` gera um array-like. Então, é necessário converte-lo  
+    em array, com o `Array.from(arguments)`
+      - Em ES5, é necessário invocar o objeto `Array`, buscar seu  
+      protótipo e então invocar o método `slice` e então dar um `apply`  
+      na propriedade `arguments`, setando-a como o `this`
+    - Ao especificar o método slice, é possível obter o segundo  
+    argumento da função `Person` invocada 
+    - Agora é necessário retornar o objeto criado 
+    - Se a função construtora retorna um objeto, ele se tornará  
+    a let person
+    - Então, é necessário retornar ou o apply da função construtora  
+    recebida por parâmetro ou o objeto retornado pela função  
+    construtora
+*/
+```
+
+# `__proto__`
+- O que é:
+  - 

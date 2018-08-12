@@ -1,11 +1,11 @@
-function Person(saying) {
-  this.saying = saying;
-}
-
-Person.prototype.talk = function() {
-  return `my prhase is ${this.saying}`;
+const cat = {
+  breed: 'munchkin'
 };
 
-const person = new Person('hi!');
+const myCat = {
+  name: 'Fluffykins'
+};
 
-console.log(person.talk());
+Object.setPrototypeOf(myCat, cat);
+
+console.log(myCat.breed);
