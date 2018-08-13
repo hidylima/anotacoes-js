@@ -1093,3 +1093,44 @@ console.log(cat);
 
 ![proto](https://user-images.githubusercontent.com/29297788/44034699-26fe0068-9ee4-11e8-9a6d-279d8890d0d4.jpg)
 
+# Object.create(obj)
+- É um método estático, do `Object.prototype`, que cria um novo objeto  
+com o `prototype` ajustado para esse novo objeto (exemplo 1)
+- Conforme exemplo 2, é possível verificar se um objeto é protótipo do  
+outro, através do método `obj1.isPrototypeOf(obj2)`
+
+exemplo 1: 
+
+```javascript
+const cat = {
+  makeSound: function() {
+    return this.sound;
+  }
+};
+
+let ze = Object.create(cat); 
+// o objeto herdou todas as propriedades e métodos do obj cat
+
+ze.sound = 'meeeeehhhhh';
+
+console.log(ze.makeSound());
+// 'meeeeehhhhh'
+```
+
+exemplo 2: 
+
+```javascript
+const cat = {
+  makeSound: function() {
+    return this.sound;
+  }
+};
+
+let ze = Object.create(cat); 
+
+ze.sound = 'meeeeehhhhh';
+
+console.log(cat.isPrototypeOf(ze)); 
+// true
+// o obj ze é uma cópia do obj cat
+```

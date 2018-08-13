@@ -1,7 +1,13 @@
-function Girafe() {}
+const cat = {
+  makeSound: function() {
+    return this.sound;
+  }
+};
 
-const koala = {};
+let ze = Object.create(cat); 
 
-Object.prototype.waffle = 'wiwuwiuww';
+ze.sound = 'meeeeehhhhh';
 
-console.log(koala.waffle);
+console.log(cat.isPrototypeOf(ze)); 
+// true
+// o obj ze é uma cópia do obj cat
