@@ -1076,5 +1076,20 @@ console.log('hello', person);
 ```
 
 # `__proto__`
-- O que é:
-  - 
+- Propriedade encontrada ao logar um objeto no console (exemplo 1)  
+- É a propriedade que reside em um objeto e referencia o prototype  
+que foi setado para aquele objeto 
+- `obj__proto__ === Object.prototype` - retorna `true`
+
+exemplo 1:
+
+```javascript
+const cat = {
+  breed: 'munchkin'
+};
+
+console.log(cat);
+```
+
+![proto](https://user-images.githubusercontent.com/29297788/44034699-26fe0068-9ee4-11e8-9a6d-279d8890d0d4.jpg)
+

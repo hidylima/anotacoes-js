@@ -1,11 +1,7 @@
-const cat = {
-  breed: 'munchkin'
-};
+function Girafe() {}
 
-const myCat = {
-  name: 'Fluffykins'
-};
+const koala = {};
 
-Object.setPrototypeOf(myCat, cat);
+Object.prototype.waffle = 'wiwuwiuww';
 
-console.log(myCat.breed);
+console.log(koala.waffle);
