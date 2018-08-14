@@ -951,6 +951,9 @@ adaptação para quem vem de outras linguagens
 - Especifica qual será o prototype de um objeto 
   - Conforme o título acima, `obj1` herdou os métodos e  
   propriedades do `obj2` (exemplo 1)
+- **Nunca usar em código em produção**. É horrível para a  
+performance da aplicação 
+  - **Usar `Object.create()`**
 
 exemplo 1:
 
@@ -1095,7 +1098,9 @@ console.log(cat);
 
 # Object.create(obj)
 - É um método estático, do `Object.prototype`, que cria um novo objeto  
-com o `prototype` ajustado para esse novo objeto (exemplo 1)
+com o `Object.prototype` ajustado para esse novo objeto (exemplo 1)
+  - No exemplo 3, é demonstrado o que o `Object.create(obj)` faz por  
+  debaixo dos panos 
 - Conforme exemplo 2, é possível verificar se um objeto é protótipo do  
 outro, através do método `obj1.isPrototypeOf(obj2)`
 
@@ -1133,4 +1138,25 @@ ze.sound = 'meeeeehhhhh';
 console.log(cat.isPrototypeOf(ze)); 
 // true
 // o obj ze é uma cópia do obj cat
+```
+
+exemplo 3: 
+
+```javascript
+const cat = {
+  makeSound: function() {
+    return this.sound;
+  }
+};
+
+const myProto = {sound: 'wooow'};
+
+function objectCreate(proto) {
+  let obj = {}; // cria um novo objeto
+  Object.setPrototypeOf(obj, proto); // seta um protótipo para o novo objeto criado
+  return obj; // retorna o novo objeto criado 
+}
+
+console.log(objectCreate(myProto).sound);
+// 'wooow'
 ```

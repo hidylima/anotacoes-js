@@ -1,13 +1,12 @@
 const cat = {
+  init: function(sound) {
+    this.sound = sound;
+  },
   makeSound: function() {
-    return this.sound;
+    console.log(this.sound);
   }
 };
 
-let ze = Object.create(cat); 
-
-ze.sound = 'meeeeehhhhh';
-
-console.log(cat.isPrototypeOf(ze)); 
-// true
-// o obj ze é uma cópia do obj cat
+const mark = Object.create(cat);
+mark.init('hi');
+mark.makeSound();
