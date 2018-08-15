@@ -842,7 +842,28 @@ que representam abstrações usadas diariamente
   - Em casos onde as instâncias/objetos dessa classe devam ter um  
   novo comportamento
 - `_property` convenção que indica que essa propriedade deve ser  
-mantida como privada
+mantida como privada 
+- Uma classe, por si, imediatamente cria um objeto, que pode ser  
+instanciado com a palavra new (exemplo 3)
+- Classes podem um `constructor`, que permite atribuir propriedades  
+ao objeto (exemplo 4)
+- Classes podem ter métodos (exemplo 5)
+- Classes podem fazer herança (exemplo 6)
+  - `extends` faz com que a classe criada herde propriedades e  
+  métodos de outra classe 
+  - `super()` é uma função que referencia o `constructor` da classe  
+  original 
+    - Necessita que os argumentos dos parâmetros presentes na classe  
+    original sejam especificados 
+- Algumas coisas que podem não funcionar conforme o esperado, quando  
+se usa classes: 
+  - Não há como fazer com que uma propriedade se torne privada 
+    - Ou seja, é possível acessá-la diretamente (exemplo 7)
+    - É possível alterá-la diretamente (exemplo 8)
+  - Uma convenção usada para indicar que uma propriedade não deve  
+  ser acessada e/ou modificada diretamente é o uso do `_` como prefixo 
+  - A funcionalidade de se ter propriedades privadas no JS não foi  
+  implementada pois JS **não** possui classes. É tudo fake 
 
 Exemplo de class com constructor: 
 
@@ -904,6 +925,94 @@ animal.setName = 'dog';
 
 console.log(animal.name);
 // 'dog'
+```
+
+exemplo 3: 
+
+```javascript
+class Mamal {}
+
+const fluffkins = new Mamal();
+
+console.log(fluffkins);
+// Mamal {}
+```
+
+exemplo 4:
+
+```javascript
+class Mamal {
+  constructor(sound) {
+    this.sound = sound;
+  }
+}
+
+const fluffkins = new Mamal('meeeoooowwwth');
+
+fluffkins;
+// Mamal { sound: 'meeeoooowwwth' }
+```
+
+exemplo 5: 
+
+```javascript
+class Mamal {
+  constructor(sound) {
+    this.sound = sound;
+  }
+
+  talk() {
+    return this.sound;
+  }
+}
+
+const fluffkins = new Mamal('meeeoooowwwth');
+
+fluffkins.talk();
+// 'meeeoooowwwth'
+```
+
+exemplo 6: 
+
+```javascript
+class Mamal {
+  constructor(sound) {
+    this.sound = sound;
+  }
+
+  talk() {
+    return this.sound;
+  }
+}
+
+class Dog extends Mamal {
+    constructor() {
+      super('wooowwllllf!');
+    }
+}
+
+const animal = new Dog();
+
+console.log(animal.talk());
+// wooowwllllf!
+```
+
+exemplo 7: 
+
+```javascript
+animal.sound; 
+// 'wooowwllllf!'
+// (acessei a propriedade, ao invés de invocar o método que a retorna) 
+```
+
+exemplo 8: 
+
+```javascript
+const animal = new Dog();
+animal.sound = 'meoooowwwth'; 
+
+animal.sound;
+// 'meoooowwwth'
 ```
 
 # Atribuição de funções à propriedades de objetos com o mesmo nome 
