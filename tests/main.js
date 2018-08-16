@@ -1,22 +1,14 @@
-class Mamal {
-  constructor(sound) {
-    this._sound = sound;
+const obj = {
+  init: function(sound) {
+    this.sound = sound;
+    return this;
+  },
+
+  talk: function() {
+    return this.sound;
   }
+};
 
-  talk() {
-    return this._sound;
-  }
-}
+const obj2 = Object.create(obj).init('hi').talk();
 
-class Dog extends Mamal {
-    constructor() {
-      super('wooowwllllf!');
-    }
-}
-
-const animal = new Dog();
-
-animal._sound = 'meoooowwwth'; 
-
-console.log(animal._sound);
-// 'meoooowwwth'
+console.log(obj2);
