@@ -1,14 +1,15 @@
-const obj = {
+const cat = {
   init: function(sound) {
     this.sound = sound;
     return this;
   },
-
-  talk: function() {
+  
+  makeSound: function() {
     return this.sound;
   }
 };
 
-const obj2 = Object.create(obj).init('hi').talk();
+const mark = Object.create(cat).init('meooowth!');
 
-console.log(obj2);
+mark.makeSound();
+// 'meooowth!'

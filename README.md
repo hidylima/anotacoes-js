@@ -1021,6 +1021,21 @@ com o `Object.prototype` ajustado para esse novo objeto (exemplo 1)
   debaixo dos panos 
 - Conforme exemplo 2, é possível verificar se um objeto é protótipo do  
 outro, através do método `obj1.isPrototypeOf(obj2)`
+- Ao usá-lo, em aplicações reais, atribuir valores à propriedades dos  
+objetos após a criação de suas instâncias pode ser repetitivo e estranho  
+[4]
+  - Neste caso, o ideal é implementar uma lógica de construtor. Um padrão  
+  comum é utilizar um método `init` dentro do primeiro objeto [5]
+    - Assim como no construtor, o método `init` irá fornecer os dados  
+    (propriedades) que são necessários para a construção do objeto [6].  
+    Vale lembrar que, em uma aplicação real, o método `init` irá conter  
+    mais lógicas implementadas
+    - Agora, após instanciar o objeto, é possível invocar apenas o método  
+    `init()` e depois o `makeSound()` [7]
+    - Para facilitar, é possível que o método `init()` retorne o `this`.  
+    Isso faz com que ao invocar o método `init()`, o próprio objeto  
+    instanciado seja retornado, possibilitando o encadeamento dos métodos  
+    `init()` e `makeSound()` [8]
 
 exemplo 1: 
 
@@ -1077,6 +1092,93 @@ function objectCreate(proto) {
 
 console.log(objectCreate(myProto).sound);
 // 'wooow'
+```
+
+[4]
+
+```javascript
+const cat = {
+  makeSound: function() {
+    return this.sound;
+  }
+};
+
+const mark = Object.create(cat);
+cat.sound = 'meowth!'; 
+// repetição para todos os objetos que forem criados
+
+console.log(mark.makeSound());
+```
+
+[5]
+
+```javascript
+const cat = {
+  init: function() {
+    
+  },
+  
+  makeSound: function() {
+    return this.sound;
+  }
+};
+```
+
+[6]
+
+```javascript
+const cat = {
+  init: function(sound) {
+    this.sound = sound;
+  },
+  
+  makeSound: function() {
+    return this.sound;
+  }
+};
+```
+
+[7]
+
+```javascript
+const cat = {
+  init: function(sound) {
+    this.sound = sound;
+  },
+  
+  makeSound: function() {
+    return this.sound;
+  }
+};
+
+const mark = Object.create(cat);
+mark.init('meowth!');
+
+mark;
+// {sound: 'meowth!'}
+
+mark.makeSound();
+// 'meowth!'
+```
+
+[8]
+
+```javascript
+const cat = {
+  init: function(sound) {
+    this.sound = sound;
+    return this;
+  },
+  
+  makeSound: function() {
+    return this.sound;
+  }
+};
+
+const mark = Object.create(cat).init('meooowth!');
+
+mark.makeSound();
+// 'meooowth!'
 ```
 
 # `class`
