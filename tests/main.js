@@ -1,15 +1,8 @@
-const cat = {
-  init: function(sound) {
-    this.sound = sound;
-    return this;
-  },
-  
-  makeSound: function() {
-    return this.sound;
-  }
-};
+const triple = function(num) {
+  return num * 3;
+}
 
-const mark = Object.create(cat).init('meooowth!');
+const myConst = triple;
 
-mark.makeSound();
-// 'meooowth!'
+console.log(myConst(7));
+// 21

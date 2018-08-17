@@ -1388,3 +1388,66 @@ class Mamal {
 console.log(typeof Mamal);
 // function
 ```
+
+# Composição acima de herança 
+- Herança é quando os tipos são projetados considerando o que eles  
+são 
+- Composição é quando os tipos são projetados considerando o que  
+eles fazem 
+- Será mostrado como resolver as limitações de herança e como  
+resolvê-las utilizando a composição 
+
+# Factories Functions 
+- Factory function é uma função que cria um objeto e o retorna 
+- Na maioria dos casos, é possível usar factories functions ao  
+invés de classes 
+  - Elas são mais simples e menos confusas que as classes 
+
+# Functional programming / Programação funcional 
+- Por que aprender? 
+  - Faz a programação ficar mais divertida 
+  - Te faz um programador melhor 
+  - Dá mais segurança em relação à qualidade do código escrito 
+  - Gera menos bugs
+    - O código fica mais fácil de ser interpretado 
+  - Aplicação escrita em menos tempo 
+    - Permite o reuso do código 
+
+## Higher-order-functions 
+- **Funções são valores** 
+  - É possível, por exemplo, atribuir uma função anônima à uma  
+  variável [1]
+  - E como qualquer outro valor, é possível passar a mesma função  
+  à outra variável [2]
+  - Ou seja, uma função é um valor. Assim como uma string ou um  
+  number, uma função pode ser atribuída à uma variável 
+  - Uma função também pode ser passada para outra função, uma  
+  higher order function 
+- Higher order functions são ideais para **composição**
+- Passar uma função para outra função permite compor funções  
+pequenas e funções maiores 
+- A higher order function mais básica e útil é a `filter()`
+
+[1]
+
+```javascript
+const triple = function(num) {
+  return num * 3;
+}
+
+triple(5);
+// 15
+```
+
+[2]
+
+```javascript
+const triple = function(num) {
+  return num * 3;
+}
+
+const myConst = triple;
+
+myConst(7);
+// 21
+```
