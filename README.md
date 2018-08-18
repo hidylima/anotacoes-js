@@ -1412,6 +1412,8 @@ invés de classes
     - O código fica mais fácil de ser interpretado 
   - Aplicação escrita em menos tempo 
     - Permite o reuso do código 
+    - Um filter, por exemplo, possui menos lógica escrita do que  
+    um loop `for`
 
 ## Higher-order-functions 
 - **Funções são valores** 
@@ -1425,8 +1427,33 @@ invés de classes
   higher order function 
 - Higher order functions são ideais para **composição**
 - Passar uma função para outra função permite compor funções  
-pequenas e funções maiores 
+pequenas em funções maiores 
 - A higher order function mais básica e útil é a `filter()`
+  - É uma função / método de array que aceita apenas um parâmetro:  
+  uma outra função 
+  - Esse tipo de função é chamada de 'callback functions', pois a  
+  função hospedeira irá chamá-la de volta 
+  - Essa função do parâmetro irá retornar uma nova versão filtrada  
+  do array
+  - Com o `filter()`, é possível retornar apenas os cachorros de  
+  um array de objetos, por exemplo [3] 
+    - Cada item do array passará pela função de callback 
+    - Essa função de callback retornará `true` or `false`
+    - Isso dirá para o filter se o item deve ou não estar no novo  
+    array 
+    - No término, a função filter retornará um novo array filtrado 
+- Quando um software é escrito em funções pequenas e simples, elas  
+podem ser integradas, compostas 
+  - Ou seja, é possível reutilizar funções em vários lugares 
+  - É possível, por exemplo, quebrar a função de callback em uma  
+  variável separada [4], pois a função de callback não tem relação  
+  direta com o filter()
+- É importante notar que as funções pequenas quebram o problema em  
+partes, de forma clara [4]
+  - Desse modo, é possível pensar, interpretar e corrigir esses  
+  problemas separadamente 
+  - É muito mais fácil do que quando as soluções estão todas  
+  misturadas, como no loop `for()`
 
 [1]
 
@@ -1450,4 +1477,49 @@ const myConst = triple;
 
 myConst(7);
 // 21
+```
+
+[3]
+
+```javascript
+const animals = [
+  {name: 'Fluffkins', species: 'rabbit'},
+  {name: 'Caro', species: 'dog'},
+  {name: 'Harold', species: 'fish'},
+  {name: 'Ursula', species: 'cat'},
+  {name: 'Hamilton', species: 'dog'},
+  {name: 'Jimmy', species: 'fish'}
+];
+
+const dogs = animals.filter(item => item.species === 'dog');
+
+console.log(dogs);
+/*
+[ { name: 'Caro', species: 'dog' }, { name: 'Hamilton', species: 'dog' } ]
+*/
+```
+
+[4]
+
+```javascript
+const isDog = item => item.species === 'dog'; 
+/*
+- função que checa se um objeto é um cachorro 
+*/ 
+
+const dogs = animals.filter(isDog);
+/*
+- cria um array e coloca os objetos/cachorros dentro dele 
+*/
+
+dogs;
+/*
+[ { name: 'Caro', species: 'dog' }, { name: 'Hamilton', species: 'dog' } ]
+*/
+```
+
+[5]
+
+```javascript
+
 ```
