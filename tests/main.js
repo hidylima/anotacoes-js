@@ -7,10 +7,7 @@ const animals = [
   {name: 'Jimmy', species: 'fish'}
 ];
 
-const isDog = item => item.species === 'dog';
-const dogs = animals.filter(isDog);
+const animalsNames = animals.map(item => 
+  ({prop1: item.name, prop2: item.species}));
 
-console.log(dogs);
-/*
-[ { name: 'Caro', species: 'dog' }, { name: 'Hamilton', species: 'dog' } ]
-*/
+console.log(animalsNames);

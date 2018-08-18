@@ -1427,21 +1427,22 @@ invés de classes
   higher order function 
 - Higher order functions são ideais para **composição**
 - Passar uma função para outra função permite compor funções  
-pequenas em funções maiores 
-- A higher order function mais básica e útil é a `filter()`
-  - É uma função / método de array que aceita apenas um parâmetro:  
-  uma outra função 
-  - Esse tipo de função é chamada de 'callback functions', pois a  
-  função hospedeira irá chamá-la de volta 
-  - Essa função do parâmetro irá retornar uma nova versão filtrada  
-  do array
-  - Com o `filter()`, é possível retornar apenas os cachorros de  
-  um array de objetos, por exemplo [3] 
-    - Cada item do array passará pela função de callback 
-    - Essa função de callback retornará `true` or `false`
-    - Isso dirá para o filter se o item deve ou não estar no novo  
-    array 
-    - No término, a função filter retornará um novo array filtrado 
+pequenas em funções maiores  
+
+### A higher order function mais básica e útil é a `filter()`
+- É uma função / método de array que aceita apenas um parâmetro:  
+uma outra função 
+- Esse tipo de função é chamada de 'callback functions', pois a  
+função hospedeira irá chamá-la de volta 
+- Essa função do parâmetro irá retornar uma nova versão filtrada  
+do array
+- Com o `filter()`, é possível retornar apenas os cachorros de  
+um array de objetos, por exemplo [3] 
+  - Cada item do array passará pela função de callback 
+  - Essa função de callback retornará `true` or `false`
+  - Isso dirá para o filter se o item deve ou não estar no novo  
+  array 
+  - No término, a função filter retornará um novo array filtrado 
 - Quando um software é escrito em funções pequenas e simples, elas  
 podem ser integradas, compostas 
   - Ou seja, é possível reutilizar funções em vários lugares 
@@ -1522,4 +1523,78 @@ dogs;
 
 ```javascript
 
+```
+
+### `map()` 
+- Assim como o filter, map é uma outra higher order function 
+- Assim como o filter, ele itera pelo array, mas ao invés de  
+descartar itens do array, ele os **transforma** 
+- É possível, por exemplo, iterar por um array de objetos e  
+obter apenas os valores de uma certa propriedade deles [1]
+- Ao contrario do filter, o map() não espera que a função de  
+callback retorne `true` or `false`
+  - map() irá incluir todos os itens no array, transformando-os  
+  conforme o que foi especificado dentro da função de callback 
+- No entanto, já que map() usa a função de callback apenas para  
+retornar qualquer item, ele pode ser usado para criar objetos  
+ou itens completamente novos: 
+  - Retornando um array de strings interpoladas aos valores das  
+  propriedades dos objetos-itens de um array [2]
+  - Retornando um array de novos objetos com valores de propriedades  
+  baseados nos valores das propriedades dos objetos-itens de um  
+  array [3]
+- Se os exemplso acima fossem feitos com um loop `for()`, o código  
+seria maior 
+  - Código curto é bom, pois quase sempre significa menos bugs 
+
+[1]
+
+```javascript
+const animals = [
+  {name: 'Fluffkins', species: 'rabbit'},
+  {name: 'Caro', species: 'dog'},
+  {name: 'Harold', species: 'fish'},
+  {name: 'Ursula', species: 'cat'},
+  {name: 'Hamilton', species: 'dog'},
+  {name: 'Jimmy', species: 'fish'}
+];
+
+const animalsNames = animals.map(item => item.name);
+
+animalsNames;
+// [ 'Fluffkins', 'Caro', 'Harold', 'Ursula', 'Hamilton', 'Jimmy' ]
+```
+
+[2]
+
+```javascript
+const animalsNames = animals.map(item => `${item.name} is a ${item.species}`);
+});
+
+console.log(animalsNames);
+/* 
+[ 'Fluffkins is a rabbit',
+'Caro is a dog',
+'Harold is a fish',
+'Ursula is a cat',
+'Hamilton is a dog',
+'Jimmy is a fish' ]
+*/
+```
+
+[3] 
+
+```javascript
+const animalsNames = animals.map(item => 
+  ({prop1: item.name, prop2: item.species}));
+
+console.log(animalsNames);
+/* 
+[ { prop1: 'Fluffkins', prop2: 'rabbit' },
+  { prop1: 'Caro', prop2: 'dog' },
+  { prop1: 'Harold', prop2: 'fish' },
+  { prop1: 'Ursula', prop2: 'cat' },
+  { prop1: 'Hamilton', prop2: 'dog' },
+  { prop1: 'Jimmy', prop2: 'fish' } ]
+*/
 ```
