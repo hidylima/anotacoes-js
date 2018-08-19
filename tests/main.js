@@ -1,13 +1,7 @@
-const animals = [
-  {name: 'Fluffkins', species: 'rabbit'},
-  {name: 'Caro', species: 'dog'},
-  {name: 'Harold', species: 'fish'},
-  {name: 'Ursula', species: 'cat'},
-  {name: 'Hamilton', species: 'dog'},
-  {name: 'Jimmy', species: 'fish'}
-];
+const fs = require('fs');
+const output = fs.readFileSync('./tests/data.txt', 'utf-8');
 
-const animalsNames = animals.map(item => 
-  ({prop1: item.name, prop2: item.species}));
-
-console.log(animalsNames);
+console.log(output);
+/* 
+<Buffer 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 77 61 66 66 6c 65 20 69 72 6f 6e 20 38 30 20 32 0d 0a 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 62 6c ... >
+*/

@@ -1598,3 +1598,78 @@ console.log(animalsNames);
   { prop1: 'Jimmy', prop2: 'fish' } ]
 */
 ```
+
+# `reduce()`
+- Se `map()` ou `filter()` não forem a alternativa correta para  
+o problema, o `reduce()` entra em cena 
+- Pode ser usado para qualquer transformação de arrays 
+- Alguns exemplos de uso: 
+  - Somar o total de valores de propriedades de um array de objetos  
+  [1]
+  - Gerar um objeto onde cada propriedade é uma pessoa, e essa  
+  propriedade recebe um array de objetos, baseado em dados  
+  de um arquivo `txt` [2]
+    - Como esses dados estão em um arquivo externo, é necessário  
+    importar o File System: `npm install file-system --save` [3]
+      - Ao logar no console, os bytes são mostrados. É importante  
+      saber que, para o computador, strings são apenas um conjunto  
+      de bytes. 
+      - Para que o texto seja interpretado de forma correta, é  
+      necessário um tipo de 'mapping' para uma tabela unicode de  
+      caracteres. 
+      - É necessário, então, passar a tabela utf-8 como string, no  
+      segundo parâmetro do método `readFileSync()` [4]
+
+[1]
+
+```javascript
+const orders = [
+  {amount: 260},
+  {amount: 950},
+  {amount: 158},
+  {amount: 823}
+];
+
+orders.reduce((acc, act) => acc + act.amount, 0);
+// 2191
+```
+
+[2] 
+
+```javascript
+/* 
+Arquivo txt: 
+
+mark johansson waffle iron 80 2
+mark johansson blender 200 1
+mark johansson knife 10 4
+Nikita Smith waffle iron 80 1
+Nikita Smith knife 10 2
+Nikita Smith pot 20 3
+
+*/
+```
+
+[3]
+
+```javascript
+const fs = require('fs');
+const output = fs.readFileSync('./tests/data.txt');
+
+console.log(output);
+/* 
+<Buffer 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 77 61 66 66 6c 65 20 69 72 6f 6e 20 38 30 20 32 0d 0a 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 62 6c ... >
+*/
+```
+
+[4]
+
+```javascript
+const fs = require('fs');
+const output = fs.readFileSync('./tests/data.txt', 'utf-8');
+
+console.log(output);
+/* 
+<Buffer 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 77 61 66 66 6c 65 20 69 72 6f 6e 20 38 30 20 32 0d 0a 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 62 6c ... >
+*/
+```
