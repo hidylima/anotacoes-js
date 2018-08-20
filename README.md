@@ -1619,6 +1619,19 @@ o problema, o `reduce()` entra em cena
       caracteres. 
       - É necessário, então, passar a tabela utf-8 como string, no  
       segundo parâmetro do método `readFileSync()` [4]
+      - Quebrar a string do txt em um array: 
+        - Encadear o método `split()`, passando por parâmetro o que  
+        deve ser ignorado (quebras de linha) [5]
+          - `split(param)` é um método de string que quebra a string  
+          em um array usando o caractere que foi passado por  
+          parâmetro 
+          - O método `trim()` remove qualquer quebra de linha ou  
+          espaço no final da string [6]
+      - Converter a string em objeto 
+        - Encadear um `map()` que com um `split()` por cada linha,  
+        quebrando todas as linhas em um array, usando as quebras de  
+        linha por parâmetro (`'\r'`) [7]
+          - Agora cada array é equivalente à uma linha do txt 
 
 [1]
 
@@ -1670,6 +1683,54 @@ const output = fs.readFileSync('./tests/data.txt', 'utf-8');
 
 console.log(output);
 /* 
-<Buffer 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 77 61 66 66 6c 65 20 69 72 6f 6e 20 38 30 20 32 0d 0a 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 62 6c ... >
+mark johansson waffle iron 80 2
+mark johansson blender 200 1
+mark johansson knife 10 4
+Nikita Smith waffle iron 80 1
+Nikita Smith knife 10 2
+Nikita Smith pot 20 3
+*/
+```
+
+[5]
+
+```javascript
+const fs = require('fs');
+const output = fs.readFileSync('./tests/data.txt', 'utf-8').split('\n');
+
+console.log(output);
+/* 
+[ 'mark johansson waffle iron 80 2\r',
+  'mark johansson blender 200 1\r',
+  'mark johansson knife 10 4\r',
+  'Nikita Smith waffle iron 80 1\r',
+  'Nikita Smith knife 10 2\r',
+  'Nikita Smith pot 20 3' ]
+*/
+```
+
+[6]
+
+```javascript
+const output = fs.readFileSync('./tests/data.txt', 'utf-8').trim().split('\n');
+```
+
+[7]
+
+```javascript
+const fs = require('fs');
+const output = fs.readFileSync('./tests/data.txt', 'utf-8')
+  .split('\n').map(item => item.split('\r'));
+
+console.log(output);
+/* 
+[ 
+  [ 'mark johansson waffle iron 80 2', '' ],
+  [ 'mark johansson blender 200 1', '' ],
+  [ 'mark johansson knife 10 4', '' ],
+  [ 'Nikita Smith waffle iron 80 1', '' ],
+  [ 'Nikita Smith knife 10 2', '' ],
+  [ 'Nikita Smith pot 20 3' ] 
+]
 */
 ```
