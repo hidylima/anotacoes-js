@@ -1606,32 +1606,27 @@ o problema, o `reduce()` entra em cena
 - Alguns exemplos de uso: 
   - Somar o total de valores de propriedades de um array de objetos  
   [1]
-  - Gerar um objeto onde cada propriedade é uma pessoa, e essa  
+  - Gerar um objeto onde cada propriedade é um nome, e essa  
   propriedade recebe um array de objetos, baseado em dados  
   de um arquivo `txt` [2]
+    - Dados do array: 
+      - Objetos com as propriedades name, price, quantity [2]
     - Como esses dados estão em um arquivo externo, é necessário  
-    importar o File System: `npm install file-system --save` [3]
-      - Ao logar no console, os bytes são mostrados. É importante  
-      saber que, para o computador, strings são apenas um conjunto  
-      de bytes. 
-      - Para que o texto seja interpretado de forma correta, é  
-      necessário um tipo de 'mapping' para uma tabela unicode de  
-      caracteres. 
-      - É necessário, então, passar a tabela utf-8 como string, no  
-      segundo parâmetro do método `readFileSync()` [4]
-      - Quebrar a string do txt em um array: 
-        - Encadear o método `split()`, passando por parâmetro o que  
-        deve ser ignorado (quebras de linha) [5]
-          - `split(param)` é um método de string que quebra a string  
-          em um array usando o caractere que foi passado por  
-          parâmetro 
-          - O método `trim()` remove qualquer quebra de linha ou  
-          espaço no final da string [6]
-      - Converter a string em objeto 
-        - Encadear um `map()` que com um `split()` por cada linha,  
-        quebrando todas as linhas em um array, usando as quebras de  
-        linha por parâmetro (`'\r'`) [7]
-          - Agora cada array é equivalente à uma linha do txt 
+    importar o File System: `npm install file-system --save` 
+      - Importar 'file-system' com o `require`
+      - Logar no console o método `.readFileSync()`
+        - 1º parâmetro: string com caminho do arquivo 
+        - 2º parâmetro: string com tabela unicode de caracteres  
+        (utf-8) [3]
+    - Quebrar os dados em um array: 
+      - Encadear o método `split()`
+      - Passar `/\n/` por parâmetro (quebras de linha são ignoradas)  
+      [4]
+    - Converter a string em objeto 
+      - Encadear um `map()` 
+      - Utilizar um `split()` em cada item 
+        - Parâmetro: `/\r/` - quebra de linha (agora cada item é um  
+        array) [5] 
 
 [1]
 
@@ -1651,86 +1646,73 @@ orders.reduce((acc, act) => acc + act.amount, 0);
 
 ```javascript
 /* 
-Arquivo txt: 
+Arquivo txt, com itens separados por tabs: 
 
-mark johansson waffle iron 80 2
-mark johansson blender 200 1
-mark johansson knife 10 4
-Nikita Smith waffle iron 80 1
-Nikita Smith knife 10 2
-Nikita Smith pot 20 3
-
+mark johansson	waffle iron	80	2
+mark johansson	blender	200	1
+mark johansson	knife	10	4
+Nikita Smith	waffle	iron	80	1
+Nikita Smith	knife	10	2
+Nikita Smith	pot	20	3
 */
 ```
+
+![objs](https://user-images.githubusercontent.com/29297788/44403447-d7a62700-a52a-11e8-8e3b-bf5af545809d.png)
 
 [3]
 
 ```javascript
-const fs = require('fs');
-const output = fs.readFileSync('./tests/data.txt');
+const fs = require('file-system')
+const output = fs.readFileSync('./tests/data.txt', 'utf-8')
 
-console.log(output);
+console.log(output)
 /* 
-<Buffer 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 77 61 66 66 6c 65 20 69 72 6f 6e 20 38 30 20 32 0d 0a 6d 61 72 6b 20 6a 6f 68 61 6e 73 73 6f 6e 20 62 6c ... >
+mark johansson	waffle iron	80	2
+mark johansson	blender	200	1
+mark johansson	knife	10	4
+Nikita Smith	waffle	iron	80	1
+Nikita Smith	knife	10	2
+Nikita Smith	pot	20	3
 */
 ```
 
 [4]
 
 ```javascript
-const fs = require('fs');
-const output = fs.readFileSync('./tests/data.txt', 'utf-8');
+const output = fs.readFileSync('./tests/data.txt', 'utf-8')
+  .split(/\n/)
 
-console.log(output);
 /* 
-mark johansson waffle iron 80 2
-mark johansson blender 200 1
-mark johansson knife 10 4
-Nikita Smith waffle iron 80 1
-Nikita Smith knife 10 2
-Nikita Smith pot 20 3
+[ 
+  'mark johansson\twaffle iron\t80\t2\r',
+  'mark johansson\tblender\t200\t1\r',
+  'mark johansson\tknife\t10\t4\r',
+  'Nikita Smith\twaffle\tiron\t80\t1\r',
+  'Nikita Smith\tknife\t10\t2\r',
+  'Nikita Smith\tpot\t20\t3' 
+]
 */
 ```
 
 [5]
 
 ```javascript
-const fs = require('fs');
-const output = fs.readFileSync('./tests/data.txt', 'utf-8').split('\n');
+const fs = require('file-system')
 
-console.log(output);
-/* 
-[ 'mark johansson waffle iron 80 2\r',
-  'mark johansson blender 200 1\r',
-  'mark johansson knife 10 4\r',
-  'Nikita Smith waffle iron 80 1\r',
-  'Nikita Smith knife 10 2\r',
-  'Nikita Smith pot 20 3' ]
-*/
-```
-
-[6]
-
-```javascript
-const output = fs.readFileSync('./tests/data.txt', 'utf-8').trim().split('\n');
-```
-
-[7]
-
-```javascript
-const fs = require('fs');
 const output = fs.readFileSync('./tests/data.txt', 'utf-8')
-  .split('\n').map(item => item.split('\r'));
+  .split(/\n/)
+  .map(item => item.split(/\r/))
 
-console.log(output);
-/* 
+console.log(output)
+
+/*
 [ 
-  [ 'mark johansson waffle iron 80 2', '' ],
-  [ 'mark johansson blender 200 1', '' ],
-  [ 'mark johansson knife 10 4', '' ],
-  [ 'Nikita Smith waffle iron 80 1', '' ],
-  [ 'Nikita Smith knife 10 2', '' ],
-  [ 'Nikita Smith pot 20 3' ] 
+  [ 'mark johansson\twaffle iron\t80\t2', '' ],
+  [ 'mark johansson\tblender\t200\t1', '' ],
+  [ 'mark johansson\tknife\t10\t4', '' ],
+  [ 'Nikita Smith\twaffle\tiron\t80\t1', '' ],
+  [ 'Nikita Smith\tknife\t10\t2', '' ],
+  [ 'Nikita Smith\tpot\t20\t3' ] 
 ]
 */
 ```
