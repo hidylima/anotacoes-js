@@ -1620,13 +1620,16 @@ o problema, o `reduce()` entra em cena
         (utf-8) [3]
     - Quebrar os dados em um array: 
       - Encadear o método `split()`
-      - Passar `/\n/` por parâmetro (quebras de linha são ignoradas)  
-      [4]
+      - Passar `\n` por parâmetro 
+        - Faz com que cada linha seja um item do array, quebras  
+        de linha são ignoradas [4]
     - Converter a string em objeto 
       - Encadear um `map()` 
       - Utilizar um `split()` em cada item 
-        - Parâmetro: `/\r/` - quebra de linha (agora cada item é um  
-        array) [5] 
+        - Parâmetro: `/[\t\r]/` (regex) - as strings '\t' e '\r'  
+        são ignoradas. Quebra cada item do array anterior em um  
+        array com strings como itens [5] 
+        - Resultado final: [6]
 
 [1]
 
@@ -1680,7 +1683,7 @@ Nikita Smith	pot	20	3
 
 ```javascript
 const output = fs.readFileSync('./tests/data.txt', 'utf-8')
-  .split(/\n/)
+  .split('\n')
 
 /* 
 [ 
@@ -1700,19 +1703,102 @@ const output = fs.readFileSync('./tests/data.txt', 'utf-8')
 const fs = require('file-system')
 
 const output = fs.readFileSync('./tests/data.txt', 'utf-8')
-  .split(/\n/)
-  .map(item => item.split(/\r/))
+  .trim()
+  .split('\n')
+  .map(item => item.split(/[\t\r]/))
 
 console.log(output)
 
 /*
 [ 
-  [ 'mark johansson\twaffle iron\t80\t2', '' ],
-  [ 'mark johansson\tblender\t200\t1', '' ],
-  [ 'mark johansson\tknife\t10\t4', '' ],
-  [ 'Nikita Smith\twaffle\tiron\t80\t1', '' ],
-  [ 'Nikita Smith\tknife\t10\t2', '' ],
-  [ 'Nikita Smith\tpot\t20\t3' ] 
+  [ 'mark johansson', 'waffle iron', '80', '2', '' ],
+  [ 'mark johansson', 'blender', '200', '1', '' ],
+  [ 'mark johansson', 'knife', '10', '4', '' ],
+  [ 'Nikita Smith', 'waffle', 'iron', '80', '1', '' ],
+  [ 'Nikita Smith', 'knife', '10', '2', '' ],
+  [ 'Nikita Smith', 'pot', '20', '3' ] 
 ]
 */
+```
+
+[6]
+
+```javascript
+const fs = require('file-system')
+
+const output = fs.readFileSync('./tests/data.txt', 'utf-8')
+  .trim()
+  .split('\n')
+  .map(item => item.split(/[\t\r]/))
+  .reduce((acc, act) => {
+    acc[act[0]] = acc[act[0]] || []
+    acc[act[0]].push({name: act[1], price: act[2], quantity: act[3]})
+    return acc
+  }, {})
+
+console.log(output)
+
+/*
+{ 
+  'mark johansson':
+   [ { name: 'waffle iron', price: '80', quantity: '2' },
+     { name: 'blender', price: '200', quantity: '1' },
+     { name: 'knife', price: '10', quantity: '4' } ],
+
+  'Nikita Smith':
+   [ { name: 'waffle', price: 'iron', quantity: '80' },
+     { name: 'knife', price: '10', quantity: '2' },
+     { name: 'pot', price: '20', quantity: '3' } ] 
+}
+*/
+```
+
+# Closures 
+- Em JS, funções não são apenas funções, elas também são closures 
+- Isso significa que o corpo da função tem acesso à variáveis que  
+foram declaradas fora da função [1]
+- Se após a função, outro valor for atribuído à variável, a função  
+obtem o valor atualizado da variável [2]
+- Um exemplo que ilustra como closures são úteis [3]
+
+[1]
+
+```javascript
+const bat = `Bruce Wayne`
+
+const greet = () => {
+  return `I'm ${bat}` // acessou a const
+}
+
+console.log(greet()) 
+// retorna o valor da const, não foi necessário passar valores por argumentos / parâmetros
+```
+
+[2]
+
+```javascript
+let bat = `Bruce Wayne`
+
+const greet = () => {
+  return `I'm ${bat}` // acessa o valor atual da let 
+}
+
+bat = 'Batman'
+
+console.log(greet()) 
+// I'm Batman
+```
+
+[3]
+
+```javascript
+function sendRequest () {
+  const requestID = '123'
+  $.ajax({
+    url: '/myUrl',
+    success: function (response) {
+      alert(`Request ${requestID} returned`)
+    }
+  })
+}
 ```
