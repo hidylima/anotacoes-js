@@ -1802,3 +1802,65 @@ function sendRequest () {
   })
 }
 ```
+
+# Currying 
+A ideia é que uma função atravesse o código e, gradualmente, receba  
+os argumentos que ela precisa. 
+
+- É quando uma função que recebe múltiplos parâmetros como entrada  
+retorna uma função com exatamente um parâmetro 
+- É quando uma função não leva todos os seus parâmetros adiante 
+  - Ao invés disso, ela requer que seja especificado apenas o primeiro  
+  argumento
+  - Para então retornar outra função, que será chamada com o  
+  segundo argumento 
+  - Para então retornar outra função, que será chamada com o  
+  terceiro argumento 
+  - Até que todos os argumentos tenham sido passados 
+  - A função no fim do encadeamento será a que retornará o valor  
+  desejado
+
+- Fazer curry em uma função
+  - Exemplo com a função a ser transformada [1]
+  - Exemplo com a função transformada [2]
+    - A função, ao ser invocada, recebe um parâmetro e retorna  
+    outra função
+    - Essa outra função, ao ser invocada, recebe um parâmetro  
+    e retorna outra função
+    - Essa última função, ao ser invocada, recebe um parâmetro  
+    e retorna uma string final 
+  - É possível atribuir à uma variável o retorno de uma das  
+  funções encadeadas [3]
+
+[1]
+
+```javascript
+let dragon = (name, size, element) => 
+  `${name} is a ${size} dragon that breathes ${element}!`
+
+console.log(dragon('Arceus', '9 meters', 'mistic'))
+// Arceus is a 9 meters dragon that breathes mistic!
+```
+
+[2]
+
+```javascript
+let dragon = 
+  name => 
+    size => 
+      element => 
+        `${name} is a ${size} dragon that breathes ${element}!`
+
+dragon('Charizard')('huge')('fire')
+// Charizard is a huge dragon that breathes fire!
+```
+
+[3]
+
+```javascript
+const charizard = dragon('Charizard')
+
+console.log(charizard('huge')('flaming fire'))
+// Charizard is a huge dragon that breathes flaming fire!
+
+```
