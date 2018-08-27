@@ -1832,6 +1832,9 @@ retorna uma função com exatamente um parâmetro
   - É possível atribuir à uma variável o retorno de uma das  
   funções encadeadas [3]
 
+- Exemplos com curry: 
+  - Soma de 3 números [4]
+
 [1]
 
 ```javascript
@@ -1863,4 +1866,113 @@ const charizard = dragon('Charizard')
 console.log(charizard('huge')('flaming fire'))
 // Charizard is a huge dragon that breathes flaming fire!
 
+```
+
+[4]
+
+```javascript
+const sum3 = 
+  num1 => 
+    num2 => 
+      num3 => 
+        `${num1} + ${num2} + ${num3} = ${num1 + num2 + num3}`
+
+const tripleSum = sum3(5)(10)(50)
+
+console.log(tripleSum)
+// '5 + 10 + 50 = 65'
+```
+
+# Recursão 
+- Em desenvolvimento de software, recursão é quando há uma chamada  
+para um método ou função dela para ela mesma 
+- A função deve se auto-invocar, no interior dentro dela mesma 
+- É necessário uma verificação, para que a recursão seja concluída,  
+ou haverá um loop infinito 
+- Quando usar: 
+  - Pode ser útil em casos onde é necessário executar a mesma  
+  tarefa repetidas vezes 
+- **Uma função recursiva pode ser usada no lugar de um loop**
+  - Mas há coisas que uma função recursiva pode fazer e um loop,  
+  não
+
+- Contagem regressiva à partir de um número [1]
+  - Declarar uma arrow function nomeada 'countDownFrom', que recebe  
+  um número como parâmetro 
+  - A função deve: 
+    - Ter uma condição para parar de se auto-invocar
+      - se o número passado por parâmetro for igual à zero,  
+      executar um return
+    - Logar no console o número passado por parâmetro
+    - Invocar a função dentro dela mesma, passando o parâmetro - 1 
+
+[1]
+
+```javascript
+const countDownFrom = (num) => {
+  if(num === 0)
+    return
+  
+  console.log(num)
+
+  countDownFrom(num -1)
+}
+
+countDownFrom(10)
+/* 
+  10
+  9
+  8
+  7
+  6
+  5
+  4
+  3
+  2
+  1
+*/
+
+```
+
+- Nome do exemplo
+  - Declarar uma let 'categories' que receba um array de objetos  
+  (simula um banco de dados relacionais)
+  - Cada objeto possui as seguintes propriedades: 
+    - id, valor: string com a raça do animal
+    - parent, string, valor: string com a espécie do animal 
+      - Só que os objetos do topo possuem o valor `null` para  
+      esta propriedade [1]
+  - Output/objetivo final [2]
+  - Declarar uma função 'makeTree'
+
+```javascript
+// [1]
+let categories = [
+  {id: 'animals', 'parent': null},
+  {id: 'mammals', 'parent': 'animals'},
+  {id: 'cats', 'parent': 'mammals'},
+  {id: 'dogs', 'parent': 'mammals'},
+  {id: 'chihuahua', 'parent': 'dogs'},
+  {id: 'labrador', 'parent': 'dogs'},
+  {id: 'persian', 'parent': 'cats'},
+  {id: 'siamese', 'parent': 'cats'}
+]
+
+/* 
+[2]
+{
+  animals: {
+    mammals: {
+      dogs: {
+        chihuahua: null,
+        labrador: null
+      },
+      cats: {
+        persian: null,
+        siamese: null
+      }
+    }
+  }
+}
+*/
 ```

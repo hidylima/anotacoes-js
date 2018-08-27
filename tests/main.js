@@ -1,18 +1,14 @@
-let dragons = [
-  {name: 'd1', element: 'lightning'},
-  {name: 'd2', element: 'timewarp'},
-  {name: 'd3', element: 'lightning'},
-  {name: 'd4', element: 'fire'},
+let categories = [
+  {id: 'animals', 'parent': null},
+  {id: 'mammals', 'parent': 'animals'},
+  {id: 'cats', 'parent': 'mammals'},
+  {id: 'dogs', 'parent': 'mammals'},
+  {id: 'chihuahua', 'parent': 'dogs'},
+  {id: 'labrador', 'parent': 'dogs'},
+  {id: 'persian', 'parent': 'cats'},
+  {id: 'siamese', 'parent': 'cats'}
 ]
 
-const hasElement = (element, obj) => element === obj.element 
-
-const filter = dragons.filter(item => hasElement('fire', item))
-
-console.log(filter)
-
-// const getElementDragons = 
-//   element => 
-//     dragons.filter(item => item.element === element)
-
-// console.log(getElementDragons('lightning'))
+const makeTree = () => {
+  
+}
