@@ -1976,3 +1976,52 @@ let categories = [
 }
 */
 ```
+
+# [Recursão e stack](https://javascript.info/recursion)
+Recursão é um pattern de programação utilizado em casos onde uma task pode  
+ser naturalmente quebrada em várias tarefas do mesmo tipo, mas mais simples.  
+Ou quando uma task pode ser simplificada em uma ação simples mais uma variável  
+da mesma tarefa. Ou, como veremos adiante, para lidar com certas estruturas  
+de dados.
+
+Quando uma função soluciona uma task, no processo, ela pode invocar muitas  
+outras funções. Um caso parcial disso é quando uma função invoca a si mesma.  
+Isso é chamado de recursão. 
+
+## Duas maneiras de pensar
+Para começar com algo simples, será declarada uma função `pow(x, n)`, que irá  
+multiplicar `x` por ele mesmo `n` vezes (potenciação / potência). 
+
+```javascript
+pow(2, 2) // 4
+pow(2, 3) // 8
+pow(2, 4) // 16
+```
+
+Há duas maneiras de implementar essa função. 
+
+1. Com o pensamento interativo de um loop `for`: 
+
+```javascript
+function pow (x, n) {
+  let result = 1
+  // 1ª) i=0, result=2
+  // 2ª) i=1, result=4
+  // 3ª) i=2, result=16
+  // 4ª) i=3, return 16
+  for(let i = 0; i < n; i++) {
+    result *= x
+    // Multiplica 'result' por 'x', 'n' vezes
+  }
+
+  return result
+}
+
+console.log( pow(2, 3) ) // 8
+```
+
+2. Com o pensamento recursivo: simplificando a tarefa e invocando a si mesmo: 
+
+```javascript
+
+```
