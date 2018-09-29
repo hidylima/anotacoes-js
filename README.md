@@ -2020,8 +2020,222 @@ function pow (x, n) {
 console.log( pow(2, 3) ) // 8
 ```
 
-2. Com o pensamento recursivo: simplificando a tarefa e invocando a si mesmo: 
+2. Com o pensamento recursivo: simplificando a tarefa e invocando a si mesma: 
 
 ```javascript
+function pow (x, n) {
+  if(n === 1) {
+    return x 
+  } else {
+    return x * pow(x, n - 1)
+  }
+}
 
+console.log( pow(2, 3) ) // 8
 ```
+
+Observe como a variável recursiva é fundamentalmente diferente.  
+
+Quando `pow(x, n)` é invocada, a execução é quebrada em duas ramificações: 
+
+```javascript
+              if n==1  = x
+             /
+pow(x, n) =
+             \
+              else     = x * pow(x, n - 1)
+```
+
+Se `n === 1`, tudo é trivial. Isso é chamado de base da recursão, pois  
+imediatamente produz o resultado óbvio: `pow(x, 1)` é igual a `x`. 
+
+Caso contrário, `pow(x, n)` será representada como `x * pow(x, n - 1)`.  
+Na matemática, seria escrito 
+
+![recursion and stack](https://user-images.githubusercontent.com/29297788/46157643-8fc59e80-c252-11e8-8b8d-e057a96c2084.png)
+
+Isso é chamado de passo recursivo: a task foi transformada em uma ação  
+simples (multiplicação por `x`) e uma simples invocação da mesma task  
+(pow com um `n` decrementado). Os próximos passos simplificam isso mais  
+ainda, até que `n` alcance `1`. 
+
+Podemos dizer também que `pow`, recursivamente, invoca a si mesma até  
+que `n` seja igual a `1`. 
+
+![recursion-pow 2x](https://user-images.githubusercontent.com/29297788/46158329-04e5a380-c254-11e8-92f6-010b8ab0a100.png)
+
+Por exemplo, para calcular `pow(2, 4)`, a variável recursiva faz os  
+seguintes passos: 
+
+1. `pow(2, 4) = 2 * pow(2, 3)`
+1. `pow(2, 3) = 2 * pow(2, 2)`
+1. `pow(2, 2) = 2 * pow(2, 1)`
+1. `pow(2, 1) = 2`
+
+Portanto, a recursão reduz a invocação de uma função para uma mais simples,  
+e então, para outra ainda mais simples, e assim por diante, até que o  
+resultado se torne óbvio. 
+
+## Recursão geralmente é mais curta 
+Uma solução recursiva geralmente é mais curta que uma iterativa. 
+
+É possível reescrever a mesma função utilizando o operador ternário `?`  
+ao invés do `if`, isso faz com que `pow(x, n)` seja mais concisa e  
+legível: 
+
+```javascript
+function pow (x, n) {
+  return n === 1 
+  ? x 
+  : x * pow(x, n - 1)
+}
+
+console.log( pow(2, 3) ) // 8
+```
+
+O número máximo de invocações aninhadas (incluindo a primeira) é chamado de  
+profundidade de recursão. No caso acima, a profundidade será exatamente `n`. 
+
+O número máximo de profundidade de recursão é limitado pela engine do JS.  
+É possível ter certeza de 10.000. Algumas engines permitem mais, mas  
+100.000 provavelmente é acima do limite para a maioria delas. Existem  
+otimizações automáticas que ajudam a aliviar isso ("otimizações de invocações  
+de cauda"), mas elas ainda não são suportadas em qualquer lugar, e funcionam  
+apenas em casos simples. 
+
+Isso limita a aplicação da recursão, mas ainda permanece ampla. Há várias  
+tasks onde o modo recursivo de se pensar fornece um código mais simples,  
+fácil de manter.
+
+## A stack da execução
+Agora, será verificado como uma invocação recursiva funciona. Para isso,  
+é necessário observar as funções por baixo dos panos. 
+
+A informação sobre a execução de uma função é armazenada eu seu contexto  
+de execução. 
+
+O contexto de execução é uma estrutura de dados internos que contém detalhes  
+sobre a execução de uma função: onde o controle de fluxo está agora, as  
+variáveis atuais, o valor do `this` (que não está sendo usado no exemplo  
+acima) e alguns outros detalhes internos. 
+
+A invocação de uma função possui exatamente um contexto de execução associado  
+à ela. 
+
+Quando uma função faz uma invocação aninhada, o que acontece é: 
+
+- A função atual é pausada
+- O contexto de execução associado à ela é lembrado em uma estrutura especial  
+de dados, chamado 'pilha de contexto de execução'.
+- A função aninhada é executada
+- Após o término, o antigo contexto de execução é trazido de volta da pilha,  
+e a função externa é retomada à partir de onde ela parou. 
+
+Agora, será verificado o que acontece durante a invocação de `pow(2, 3)`. 
+
+## `pow(2, 3)`
+No início da invocação de `pow(2, 3)`, o contexto de execução irá armazenar  
+as variáveis `x = 2, n = 3`, o fluxo de execução está na linha 1 da função. 
+
+É possível esboçar esse contexto como:
+
+![context](https://user-images.githubusercontent.com/29297788/46248493-3f844300-c3f0-11e8-84b9-0a0d622dfbb8.png)
+
+Que é quando a função começa a ser executada. A condição `n === 1` é `false`,  
+então o fluxo continua dentro da segunda ramificação do `if`: 
+
+```javascript
+function pow (x, n) {
+  if(n === 1) {
+    return x
+  } else {
+    return x * pow(x, n - 1)  // 2ª RAMIFICAÇÃO DO IF
+  }
+}
+```
+
+As variáveis são as mesmas, mas a linha foi modificada, então, agora o  
+contexto é:
+
+![context-02](https://user-images.githubusercontent.com/29297788/46248534-d650ff80-c3f0-11e8-8f3c-072933a67597.png)
+
+Para calcular `x * pow(x, n - 1)`, é necessário fazer uma sub-invocação  
+de `pow` com os novos argumentos `pow(2, 2)`. 
+
+## `pow(2, 2)`
+Para uma invocação aninhada, o JS se lembra do contexto da execução atual,  
+na pilha de contexto de execução. 
+
+Neste ponto, a mesma função `pow` está sendo invocada, mas isso é  
+absolutamente irrelevante. O processo é o mesmo para todas as funções: 
+
+1. O contexto atual é lembrado, no topo da pilha
+1. O novo contexto é criado para a sub-invocação
+1. Quando a sub-invocação é finalizada, o contexto anterior é disparado  
+da pilha e sua execução continua 
+
+Esse é o contexto da pilha quando a sub-invocação `pow(2, 2)` foi feita: 
+
+![context-03](https://user-images.githubusercontent.com/29297788/46248603-cbe33580-c3f1-11e8-86ac-b0b1ccf6765e.png)
+
+O novo contexto de execução está no topo (e em negrito), e o contexto  
+lembrado anteriormente na parte inferior. 
+
+Quando a sub-invocação é finalizada, é fácil retomar o contexto anterior,  
+pois ele mantém ambas as variáveis e o exato lugar pausado do código. Na  
+imagem acima, a palavra 'line' foi utilizada, mas é claro, é mais preciso. 
+
+## `pow(2, 1)`
+O processo se repete: uma nova sub-invocação é feita na linha 5, desta vez,  
+com os argumentos `x = 2, n = 1`.
+
+Um novo contexto de execução é criado, o contexto anterior é empurrado para  
+o topo da pilha: 
+
+![context-04](https://user-images.githubusercontent.com/29297788/46248671-c89c7980-c3f2-11e8-8feb-c85740ce484b.png)
+
+Agora, há 2 contextos antigos, e um sendo executado atualmente; `pow(2, 1)`.
+
+## A saída
+Durante a execução de `pow(2, 1)`, diferentemente de antes, a condição  
+`n === 1` é `true`, então, a primeira branch do `if` é executada: 
+
+```javascript
+function pow (x, n) {
+  if(n === 1) {       // 1ª BRANCH 
+    return x
+  } else {
+    return x * pow(x, n - 1)
+  }
+}
+```
+
+Não há mais invocações aninhadas, então a função é finalizada,  
+retornando 2. 
+
+Como a função foi finalizada, seu contexto de execução não é mais  
+necessário, então esse contexto é removido da memória. O contexto  
+anterior é restaurado no topo da pilha:
+
+![context-05](https://user-images.githubusercontent.com/29297788/46248733-714ad900-c3f3-11e8-9127-0af248e88c30.png)
+
+A execução de `pow(2, 2)` é retomada. Ela possui o resultado da  
+sub-invocação `pow(2, 1)`, então ela também pode finalizar a verificação  
+de `x * pow(x, n - 1)`, retornando 4. 
+
+Então, o contexto anterior é restaurado: 
+
+![context-06](https://user-images.githubusercontent.com/29297788/46248758-d1417f80-c3f3-11e8-9c2f-418da740e943.png)
+
+Quando é finalizado, é obtido o resultado de `pow(2, 3) = 8`.
+
+A profundidade da recursão, neste caso, foi 3. 
+
+Como é possível observar à partir das ilustrações acima, a profundidade  
+da execução é igual o número máximo do contexto na stack. 
+
+
+
+Note the memory requirements. Contexts take memory. In our case, raising to the power of n actually requires the memory for n contexts, for all lower values of n.
+
+A loop-based algorithm is more memory-saving:
