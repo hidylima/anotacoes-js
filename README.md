@@ -2234,8 +2234,195 @@ A profundidade da recursão, neste caso, foi 3.
 Como é possível observar à partir das ilustrações acima, a profundidade  
 da execução é igual o número máximo do contexto na stack. 
 
+Observe os requisitos de memória. Contexto consome memória. No exemplo  
+acima, a elevação à potência requer memória para `n` contextos, para  
+todos os valores menores de `n`. 
 
+Um algorítimo baseado em loop consome menos memória: 
 
-Note the memory requirements. Contexts take memory. In our case, raising to the power of n actually requires the memory for n contexts, for all lower values of n.
+```javascript
+function pow(x, n) {
+  let result = 1;
 
-A loop-based algorithm is more memory-saving:
+  for (let i = 0; i < n; i++) {
+    result *= x;
+  }
+
+  return result;
+}
+```
+
+A função `pow` utiliza um único contexto, alterando `i` e `result`.  
+Seus requerimentos de memória são pequenos, fixos e não dependem  
+de `n`. 
+
+**Qualquer recursão pode ser reescrita como um loop. A variável do loop**  
+**geralmente é mais efetiva**. 
+
+Mas às vezes, reescrever não é simples, especialmente quando a função  
+utiliza sub-invocações recursivas diferentes, dependendo das condições  
+e mescla seus resultados, ou quando a ramificação é mais intrínseca. E  
+a otimização talvez seja desnecessária e totalmente descompensadora. 
+
+Recursão possibilita um código mais curto, fácil de entender e manter.  
+Otimizações não são requisitadas em todos os lugares, na maioria das  
+vezes, um bom código é necessário, por isso a recursão é utilizada. 
+
+## Travessias recursivas 
+Outra ótima aplicação de recursão é uma travessia recursiva. 
+
+Imaginamemos uma empresa. A estrutura de funcionários pode ser  
+representada como um objeto: 
+
+```javascript
+let company = {
+  sales: [{
+    name: 'John',
+    salary: 1000
+  }, {
+    name: 'Alice',
+    salary: 600
+  }],
+
+  development: {
+    sites: [{
+      name: 'Peter',
+      salary: 2000
+    }, {
+      name: 'Alex',
+      salary: 1800
+    }],
+
+    internals: [{
+      name: 'Jack',
+      salary: 1300
+    }]
+  }
+};
+```
+
+Em outras palavras, uma empressa possui departamentos. 
+
+- Um departamento pode ter um array de funcionários. Por exemplo, `sales`  
+possui 2 funcionários: John e Alice. 
+
+- Ou um departamento pode ser dividido em sub-departamentos, assim como  
+`development` possui 2 ramificações: `sites` e `internals`. Cada um  
+deles possui seus próprios funcionários. 
+
+- Também é possível que quando um sub-departamento cresça, ele seja  
+dividido em sub-sub-departamentos (ou equipes). 
+
+Por exemplo, o departamento `sites`, futuramente, pode ser dividido em  
+equipes para `siteA` e `siteB`. E eles, potencialmente, podem ser ainda  
+mais divididos. Isso não está no exemplo acima, é apenas algo para se  
+ter em mente. 
+
+Digamos que é desejado que uma função some todos os salários. Como é  
+possível fazer isso? 
+
+Uma abordagem iterativa não é fácil, pois a estrutura não é simples.  
+A primeira ideia talvez seja fazer um loop `for`, com um sub-loop  
+iterando sobre o 1º nível de departamentos. Mas será necessário haver  
+mais sub-loops aninhados para os departamentos de 3º nível que podem  
+aparecer no futuro. Se forem inseridos 3-4 subloops aninhados para  
+atravessar um simples objeto, o código ficará muito feio. 
+
+A recursão é uma possibilidade. 
+
+Como é possível observar, quando a função acessa um departamento para que  
+a soma seja feita, há duas possibilidades: 
+
+1. Ou é um departamento "simples', com um array de pessoas - então os  
+salários podem ser somados em um loop simples.
+
+1. Ou é um objeto com `n` sub-departamentos - então é possível fazer  
+`n` invocações recursivas para obter a soma para cada um dos sub-níveis  
+e combinar os resultados.
+
+O passo 1 é a base da recursão.  
+
+O passo 2 é o passo-a-passo recursivo. Uma task complexa é dividida em  
+sub-tarefas para departamentos menores. Eles podem se dividir novamente,  
+mas cedo ou tarde, a divisão irá ser finalizada no passo 1. 
+
+O algorítimo é, provavelmente, ainda mais fácil para a leitura do código: 
+
+```javascript
+function sumSalaries(department) {
+  if (Array.isArray(department)) { // passo (1)
+    return department.reduce((prev, current) => prev + current.salary, 0); // sum the array
+  } else { // passo (2)
+    let sum = 0;
+    for (let subdep of Object.values(department)) {
+      sum += sumSalaries(subdep); // invocação recursiva para sub-departamentos, soma os resultados
+    }
+    return sum;
+  }
+}
+
+sumSalaries(company); // 6700
+```
+
+O código é curto e legível. É o poder da recursão. A função também funciona  
+para qualquer nível de sub-departamento aninhado.
+
+Diagrama de invocações: 
+
+![recursive-salaries 2x](https://user-images.githubusercontent.com/29297788/46268073-e19a4d00-c50e-11e8-963b-914322a2b122.png)
+
+É facilmente possível ver a ideia: para um objeto `{...}`, sub-invocações  
+são executadas, enquanto que arrays `[...]` são as 'folhas' da árvore da  
+recursão, que fornecem o resultado imediatamente. 
+
+O código possui características já mencionadas anteriormente:
+
+- O método `arr.reduce()` para obter a soma do array.
+- O loop `for(val of Object.values(obj))` para iterar sobre os valores  
+do objeto: `Object.values` retorna um array. 
+
+## Estruturas recursivas
+Uma estrutura de dados recursiva é uma estrutura que replica a si mesmo  
+em partes. 
+
+Essa estrutura foi vista no exemplo acima. 
+
+Um departamento da empresa é: 
+
+- Ou um array de pessoas
+- Ou um objeto com departamentos
+
+Para web-developers, há outros exemplos bem mais conhecidos: documentos  
+HTML e XML.
+
+Em documentos HTML, uma tag `<html>` deve conter uma lista de: 
+
+- Pedaços de texto
+- Comentários HTML
+- Outras tags HTML (que por sua vez, podem conter pedaços de texto,  
+comentários ou outras tags, etc )
+
+Essa é, novamente, uma definição recursiva.
+
+Para uma melhor compreensão, mais uma estrutura recursiva será vista,  
+chamada "Linked List", que pode ser uma alternativa melhor que arrays,  
+em alguns casos. 
+
+## Linked List
+Imaginando armazenar uma lista ordenada de objetos, a escolha natural  
+seria um array: 
+
+```javascript
+let arr = [obj1, obj2, obj3];
+```
+
+Mas há um problema com arrays: as operações de deleção e inserção de elementos  
+são trabalhosas. 
+
+…But there’s a problem with arrays. The “delete element” and “insert element” operations are expensive. For instance, arr.unshift(obj) operation has to renumber all elements to make room for a new obj, and if the array is big, it takes time. Same with arr.shift().
+
+The only structural modifications that do not require mass-renumbering are those that operate with the end of array: arr.push/pop. So an array can be quite slow for big queues.
+
+Alternatively, if we really need fast insertion/deletion, we can choose another data structure called a linked list.
+
+The linked list element is recursively defined as an object with:
