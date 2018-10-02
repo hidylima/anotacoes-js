@@ -2007,8 +2007,8 @@ function pow (x, n) {
   let result = 1
   // 1ª) i=0, result=2
   // 2ª) i=1, result=4
-  // 3ª) i=2, result=16
-  // 4ª) i=3, return 16
+  // 3ª) i=2, result=8
+  // 4ª) i=3, não entrou no loop
   for(let i = 0; i < n; i++) {
     result *= x
     // Multiplica 'result' por 'x', 'n' vezes
