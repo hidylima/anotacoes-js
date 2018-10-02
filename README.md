@@ -2417,12 +2417,278 @@ let arr = [obj1, obj2, obj3];
 ```
 
 Mas há um problema com arrays: as operações de deleção e inserção de elementos  
-são trabalhosas. 
+são trabalhosas. Por exemplo, a operação `arr.unshift(obj)` tem que renumerar  
+todos os elementos para abrir espaço para um novo objeto, e se o array é grande,  
+a operação é demorada. O mesmo vale para o `arr.shift()`.
 
-…But there’s a problem with arrays. The “delete element” and “insert element” operations are expensive. For instance, arr.unshift(obj) operation has to renumber all elements to make room for a new obj, and if the array is big, it takes time. Same with arr.shift().
+As únicas modificações estruturais que não requerem renumeração massiva são  
+aquelas que operam no fim do array: `arr.push/pop`. Portanto, um array pode  
+ser muito lento para grandes filas de elementos. 
 
-The only structural modifications that do not require mass-renumbering are those that operate with the end of array: arr.push/pop. So an array can be quite slow for big queues.
+Como alternativa, se é necessário inserir/deletar rapidamente, é possível  
+escolher outra estrutura de dados, chamada 'linked list'. 
 
-Alternatively, if we really need fast insertion/deletion, we can choose another data structure called a linked list.
+O elemento linked list é recursivamente definido como um objeto com: 
 
-The linked list element is recursively defined as an object with:
+- **value**
+- **next** - propriedade referenciando o próximo elemento linked list, ou  
+`null`, se é o fim.
+
+Por exemplo: 
+
+```javascript
+let list = {
+  value: 1,
+  next: {
+    value: 2,
+    next: {
+      value: 3,
+      next: {
+        value: 4,
+        next: null
+      }
+    }
+  }
+};
+```
+
+Representação gráfica da lista: 
+
+![linked-list 2x](https://user-images.githubusercontent.com/29297788/46325991-31d9e380-c5d1-11e8-90d3-4d8009822383.png)
+
+Um código alternativo para a criação da linked list: 
+
+```javascript
+let list = { value: 1 };
+list.next = { value: 2 };
+list.next.next = { value: 3 };
+list.next.next.next = { value: 4 };
+```
+
+É possível ver claramente que há múltiplos objetos, cada um tem o `value`  
+e `next` apontando para o próximo. A variação da lista é o primeiro objeto  
+no encadeamento, portanto, ao seguir os ponteiros `next` da lista, é  
+possível obter qualquer elemento. 
+
+A lista pode ser facilmente dividida em múltiplas partes e, mais tarde,  
+unida de volta: 
+
+```javascript
+let secondList = list.next.next;
+list.next.next = null;
+```
+
+![linked-list-split 2x](https://user-images.githubusercontent.com/29297788/46326207-20dda200-c5d2-11e8-9fa7-bcf902367137.png)
+
+Para unir:
+
+```javascript
+list.next.next = secondList;
+```
+
+E certamente é possível inserir ou remover items em qualquer lugar.
+
+Por exemplo, para preceder um novo valor, é necessário atualizar o início  
+da lista:
+
+```javascript
+let list = { value: 1 };
+list.next = { value: 2 };
+list.next.next = { value: 3 };
+list.next.next.next = { value: 4 };
+
+// precedendo o novo valor da lista
+list = { value: "new item", next: list };
+```
+
+![linked-list-0 2x](https://user-images.githubusercontent.com/29297788/46326390-d6105a00-c5d2-11e8-8306-f91e38c114af.png)
+
+Para remover um `value` do meio da lista, basta alterar `next` do value  
+anterior: 
+
+```javascript
+list.next = list.next.next;
+```
+
+![linked-list-remove-1 2x](https://user-images.githubusercontent.com/29297788/46326469-3ef7d200-c5d3-11e8-8a00-6ec6b83f6f4d.png)
+
+`list.next` pulou do value `1` para o value `2`. value `1` agora está  
+excluído do encadeamento. Se o value `1` não está armazenado em outro  
+lugar, ele será automaticamente removido da memória. 
+
+Diferentemente dos arrays, não há uma renumeração massiva, é possível  
+facilmente reorganizar elementos. 
+
+Naturalmente, listas não são sempre melhores que arrays. Caso contrário,  
+todo mundo usaria apenas listas. 
+
+A principal desvantagem é que não é fácil acessar um elemento através  
+de seu número. Em um array, isso é fácil: `arr[n]` é uma referência  
+direta. Em uma lista, é necessário iniciar a busca à partir do primeiro  
+item, e depois `next` `n` vezes para acessar o elemento desejado. 
+
+Mas, nem sempre essas operações são necessárias. Por exemplo, quando é  
+necessário obter uma fila, ou mesmo um deque - a estrutura ordenada que  
+permite remover/adicionar elementos de ambas extremidades. 
+
+As vezes, vale a pena adicionar outra variável chamada `tail` para  
+trackear o último elemento da lista (e atualizá-la quando um elemento for  
+adicionado/removido do fim da lista). Para grandes conjuntos de elementos,  
+a diferença da velocidade em relação aos arrays é enorme. 
+
+## Resumo
+
+Termos:
+
+- Recursão é um termo de programação que significa função de "auto-invocação".  
+Esse tipo de função pode ser utilizada para resolver certas tarefas de  
+maneiras elegantes. 
+
+O ato de uma função invocar a si mesma é chamado de recursion step. A base da  
+recursão são os argumentos da função que tornam a task tão simples a ponto da  
+função não fazer invocações adicionais. 
+
+- Uma estrutura de dados definida como recursiva é uma estrutura de dados que  
+pode ser definida utilizando a si própria. 
+
+Por exemplo, a 'linked list' pode ser definida como uma estrutura de dados  
+consistindo de um objeto referenciando uma lista ou `null`. 
+
+```javascript
+list = { value, next -> list }
+```
+
+Árvores como as árvores de elementos HTML ou de departamentos (vista acima)  
+também são naturalmente recursivas: possuem ramificações e cada ramificação  
+pode possuir outras ramificações. 
+
+Funções recursivas podem ser utilizadas para percorrê-las, como visto na  
+função de exemplo `sumSalary`. 
+
+Qualquer função recursiva pode ser reescrita de forma iterativa. Às vezes  
+esse é um requisito para otimizar código. Mas para muitas tasks, uma solução  
+recursiva é rápida o suficiente e mais fácil de ler e manter. 
+
+## Exercícios
+
+###Some todos os números até o número que foi dado
+Escreva uma função `sumTo(n)` que calcula a soma ds números `1 + 2 + ... + n`.
+
+Por exemplo: 
+
+```javascript
+sumTo(1) = 1
+sumTo(2) = 2 + 1 = 3
+sumTo(3) = 3 + 2 + 1 = 6
+sumTo(4) = 4 + 3 + 2 + 1 = 10
+...
+sumTo(100) = 100 + 99 + ... + 2 + 1 = 5050
+```
+
+Faça 3 variações da solução: 
+
+1. Utilizando um for loop.
+1. Utilizando uma recursão, pois `sumTo(n) = n + sumTo(n-1)` para `n > 1`.
+1. Utilizando a fórmula de progressão aritimética.
+
+Um exemplo do resultado:
+
+```javascript
+function sumTo(n) { /*... your code ... */ }
+
+alert( sumTo(100) ); // 5050
+```
+
+Qual solução é a mais rápida? E a mais lenta? Porquê?
+
+É possível utilizar a recursão para `sumTo(100000)`?
+
+### Calcule o fatorial
+O fatorial de um número natural é um número multiplicado por `número menos um`,  
+por `número menos dois`, e assim por diante, até `1`. O fatorial de `n` é `n`. 
+
+É possível definir o fatorial como:
+
+```javascript
+n! = n * (n - 1) * (n - 2) * ... * 1
+```
+
+Valores de fatoriais para `n` diferentes: 
+
+```javascript
+1! = 1
+2! = 2 * 1 = 2
+3! = 3 * 2 * 1 = 6
+4! = 4 * 3 * 2 * 1 = 24
+5! = 5 * 4 * 3 * 2 * 1 = 120
+```
+
+A task é escrever uma função `factorial(n)` que calcula `n!` utilizando  
+invocações recursivas. 
+
+```javascript
+alert( factorial(5) ); // 120
+```
+
+Dica: `n!` pode ser escrito como `n * (n - 1)!` Por exemplo: `3! = 3*2! = 3*2*1! = 6`. 
+
+### Sequência Fibonacci
+Os números da sequência Fibonacci possuem a fórmula  
+
+![recursion and stack 1](https://user-images.githubusercontent.com/29297788/46327754-b92b5500-c5d9-11e8-8707-285ee2a9b41a.png)
+
+Em outras palavras, o próximo número é uma soma dos dois números  
+anteriores. 
+
+Os primeiros dois números são `1`, então `2(1+1)`, então 3(1+2), 5(2+3)  
+e assim por diante: `1, 1, 2, 3, 5, 8, 13, 21....`
+
+Números Fibonacci são relacionados à Golden Ratio e o muitos fenômenos  
+naturais. 
+
+Escreva uma função `fib(n)`, que retorna o `n-th` Fibonacci number. 
+
+Um exemplo: 
+
+```javascript
+function fib(n) { /* your code */ }
+
+alert(fib(3)); // 2
+alert(fib(7)); // 13
+alert(fib(77)); // 5527939700884757
+```
+
+A função deve ser rápida. A invocação de `fib(77)` não deve levar mais  
+de uma fração de um segundo. 
+
+### Retorne uma única linked list
+Temos uma única linked list: 
+
+```javascript
+let list = {
+  value: 1,
+  next: {
+    value: 2,
+    next: {
+      value: 3,
+      next: {
+        value: 4,
+        next: null
+      }
+    }
+  }
+};
+```
+
+Escreva uma função `printList(list)`, que retorna items da lista,  
+um por um. 
+
+Faça duas variações da solução: utilizando um loop e utilizando recursão.
+
+Qual é melhor, com ou sem recursão?
+
+### Retorne uma única linked list na ordem reversa 
+Retorne uma única linked list à partir do código da task anterior, em  
+ordem reversa. 
+
+Faça duas soluções: utilizando um loop e utilizando recursão. 
